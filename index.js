@@ -21,21 +21,25 @@ app.post('/webhook', async (req, res) => {
         console.log(`Mensagem recebida: ${text} de ${chatId}`);
 
         // Aqui você pode enviar a mensagem para o seu site (opcional)
-        // const response = await fetch('https://www.seubet.com/cassino-ao-vivo/slots/all/28/evolution/8267-217032-football-studio?mode=real', {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify({ chatId, text }),
-        // });
+        /*
+        const response = await fetch('https://www.seubet.com/cassino-ao-vivo/slots/all/28/evolution/8267-217032-football-studio?mode=real', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chatId, text }),
+        });
+        */
 
         // Se precisar enviar uma resposta ao Telegram
-        // await fetch(`https://api.telegram.org/bot7377232961:AAFAjIK6cV0ZHEwmRDgqdW_TtLeADyGAJDs/sendMessage`, {
-        //     method: 'POST',
-        //     body: JSON.stringify({
-        //         chat_id: chatId,
-        //         text: 'Sua mensagem foi recebida!',
-        //     }),
-        //     headers: { 'Content-Type': 'application/json' },
-        // });
+        /*
+        await fetch(`https://api.telegram.org/bot7377232961:AAFAjIK6cV0ZHEwmRDgqdW_TtLeADyGAJDs/sendMessage`, {
+            method: 'POST',
+            body: JSON.stringify({
+                chat_id: chatId,
+                text: 'Sua mensagem foi recebida!',
+            }),
+            headers: { 'Content-Type': 'application/json' },
+        });
+        */
 
         res.sendStatus(200); // Responde ao Telegram que a mensagem foi recebida
     } else {
