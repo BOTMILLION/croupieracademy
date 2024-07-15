@@ -3,13 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Italo Oliveira",
   "license": "ISC",
-  "description": "",
+  "description": "Um bot para Telegram que processa mensagens.",
   "dependencies": {
     "express": "^4.19.2",
     "node-fetch": "^3.3.2"
