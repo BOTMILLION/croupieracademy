@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fetch = require('node-fetch'); // Se precisar enviar requisições HTTP
+
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args)); // Importação dinâmica
 
 const app = express();
 const PORT = process.env.PORT || 3000;
