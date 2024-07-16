@@ -18,7 +18,35 @@ const server = app.listen(PORT, () => {
 
 // Rota GET para a raiz
 app.get('/', (req, res) => {
-    res.send('Servidor funcionando!'); // Mensagem simples ou você pode retornar um HTML
+    res.send(`
+        <!DOCTYPE html>
+        <html lang="pt-BR">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Chat Telegram</title>
+        </head>
+        <body>
+            <h1>Bem-vindo ao Chat Telegram</h1>
+            <button id="connectButton">Conectar ao WebSocket</button>
+            <ul id="messages"></ul>
+            <script>
+                const connectButton = document.getElementById('connectButton');
+                const messagesList = document.getElementById('messages');
+
+                connectButton.onclick = () => {
+                    const ws = new WebSocket('ws://localhost:${PORT}'); // Ajuste a URL conforme necessário
+
+                    ws.onmessage = (event) => {
+                        const li = document.createElement('li');
+                        li.textContent = event.data;
+                        messagesList.appendChild(li);
+                    };
+                };
+            </script>
+        </body>
+        </html>
+    `); // Retorna um HTML simples com um botão para conectar ao WebSocket
 });
 
 // Configurar WebSocket
@@ -68,4 +96,3 @@ app.post('/webhook', async (req, res) => {
         res.sendStatus(400); // Se não houver mensagem
     }
 });
-

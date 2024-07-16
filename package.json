@@ -1,9 +1,10 @@
 {
   "name": "meu-bot-telegram",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.mjs",
+  "type": "module",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.mjs"
   },
   "keywords": [],
   "author": "Italo Oliveira",
@@ -11,6 +12,7 @@
   "description": "Um bot para Telegram que processa mensagens.",
   "dependencies": {
     "express": "^4.19.2",
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^3.3.2",
+    "ws": "^8.18.0"
   }
 }
