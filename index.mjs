@@ -9,11 +9,12 @@ app.use(express.json());
 
 let mensagens = [];
 
+// Iniciar o servidor HTTP
 const server = app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 
-    // Configurar o webhook do Telegram
-    const urlWebhook = `https://api.telegram.org/bot7377232961:AAFAjIK6cV0ZHEwmRDgqdW_TtLeADyGAJDs/setWebhook?url=https://telegramheroku-87abbc9dd2f9.herokuapp.com/`;
+    // Configurar o webhook do Telegram para o endpoint correto
+    const urlWebhook = `https://api.telegram.org/bot7377232961:AAFAjIK6cV0ZHEwmRDgqdW_TtLeADyGAJDs/setWebhook?url=https://telegramheroku-87abbc9dd2f9.herokuapp.com/webhook`;
 
     fetch(urlWebhook)
         .then(response => response.json())
@@ -86,6 +87,7 @@ app.get('/', (req, res) => {
     `);
 });
 
+// Iniciar o servidor WebSocket
 const wss = new WebSocketServer({ server });
 
 wss.on('connection', (ws) => {
