@@ -13,7 +13,7 @@ const server = app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 
     // Configurar o webhook do Telegram
-    const urlWebhook = `https://api.telegram.org/bot7377232961:AAFAjIK6cV0ZHEwmRDgqdW_TtLeADyGAJDs/setWebhook?url=https://telegramheroku-87abbc9dd2f9.herokuapp.com/webhook`;
+    const urlWebhook = `https://api.telegram.org/bot7377232961:AAFAjIK6cV0ZHEwmRDgqdW_TtLeADyGAJDs/setWebhook?url=https://telegramheroku-87abbc9dd2f9.herokuapp.com/`;
 
     fetch(urlWebhook)
         .then(response => response.json())
@@ -55,7 +55,7 @@ app.get('/', (req, res) => {
                 let ws;
 
                 function conectarWebSocket() {
-                    ws = new WebSocket('wss://telegramheroku-87abbc9dd2f9.herokuapp.com');
+                    ws = new WebSocket('wss://telegramheroku-87abbc9dd2f9.herokuapp.com/');
 
                     ws.onopen = function() {
                         console.log('Conectado ao servidor WebSocket');
@@ -109,7 +109,7 @@ wss.on('connection', (ws) => {
 app.post('/webhook', async (req, res) => {
     console.log('Corpo da requisição recebido:', JSON.stringify(req.body, null, 2));
 
-    const message = req.body.channel_post; // Mudado para channel_post
+    const message = req.body.message || req.body.edited_channel_post;
 
     // Verifique se a mensagem é do canal correto
     if (message && message.chat && message.chat.id === -1002121843991 && message.text) {
