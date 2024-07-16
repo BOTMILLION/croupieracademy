@@ -33,23 +33,39 @@ app.get('/', (req, res) => {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Chat Telegram</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 0;
+                    padding: 20px;
+                }
+                #messages {
+                    border: 1px solid #ccc;
+                    padding: 10px;
+                    height: 300px;
+                    overflow-y: scroll;
+                    margin-bottom: 20px;
+                }
+            </style>
         </head>
         <body>
             <h1>Bem-vindo ao Chat Telegram</h1>
-            <button id="connectButton">Conectar ao WebSocket</button>
-            <ul id="messages"></ul>
+            <div id="messages"></div>
             <script>
-                const connectButton = document.getElementById('connectButton');
-                const messagesList = document.getElementById('messages');
+                const ws = new WebSocket('wss://telegramheroku-87abbc9dd2f9.herokuapp.com');
 
-                connectButton.onclick = () => {
-                    const ws = new WebSocket('ws://localhost:${PORT}');
+                ws.onopen = function() {
+                    console.log('Conectado ao servidor WebSocket');
+                };
 
-                    ws.onmessage = (event) => {
-                        const li = document.createElement('li');
-                        li.textContent = event.data;
-                        messagesList.appendChild(li);
-                    };
+                ws.onmessage = function(event) {
+                    const messagesDiv = document.getElementById('messages');
+                    messagesDiv.innerHTML += \`<p>\${event.data}</p>\`;
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight; // Rolagem automática
+                };
+
+                ws.onclose = function() {
+                    console.log('Conexão WebSocket encerrada');
                 };
             </script>
         </body>
