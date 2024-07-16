@@ -23,7 +23,7 @@
     <h1>Mensagens do Telegram</h1>
     <div id="messages"></div>
     <script>
-        const ws = new WebSocket('ws://localhost:3000');
+        const ws = new WebSocket('wss://telegramheroku-87abbc9dd2f9.herokuapp.com');
 
         ws.onopen = function() {
             console.log('Conectado ao servidor WebSocket');
