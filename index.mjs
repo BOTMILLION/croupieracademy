@@ -53,12 +53,21 @@ app.get('/', (req, res) => {
             <div id="messages"></div>
             <script>
                 let ws;
+                let keepAlive;
 
                 function conectarWebSocket() {
                     ws = new WebSocket('wss://telegramheroku-87abbc9dd2f9.herokuapp.com/');
 
                     ws.onopen = function() {
                         console.log('Conectado ao servidor WebSocket');
+                        
+                        // Mecanismo de keep-alive
+                        keepAlive = setInterval(() => {
+                            if (ws.readyState === WebSocket.OPEN) {
+                                console.log('Enviando ping');
+                                ws.send('ping'); // Envia um ping para manter a conexão
+                            }
+                        }, 30000); // A cada 30 segundos
                     };
 
                     ws.onmessage = function(event) {
@@ -71,6 +80,7 @@ app.get('/', (req, res) => {
 
                     ws.onclose = function() {
                         console.log('Conexão WebSocket encerrada. Tentando reconectar...');
+                        clearInterval(keepAlive); // Limpa o intervalo de keep-alive
                         setTimeout(conectarWebSocket, 2000);
                     };
 
