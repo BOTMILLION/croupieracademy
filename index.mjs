@@ -13,7 +13,7 @@ const server = app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 
     // Configurar o webhook do Telegram
-    const urlWebhook = `https://api.telegram.org/bot7377232961:AAFAjIK6cV0ZHEwmRDgqdW_TtLeADyGAJDs/setWebhook?url=https://telegramheroku-87abbc9dd2f9.herokuapp.com/`;
+    const urlWebhook = `https://api.telegram.org/bot${process.env.7377232961:AAFAjIK6cV0ZHEwmRDgqdW_TtLeADyGAJDs}/setWebhook?url=https://telegramheroku-87abbc9dd2f9.herokuapp.com/webhook`;
 
     fetch(urlWebhook)
         .then(response => response.json())
@@ -62,11 +62,11 @@ app.get('/', (req, res) => {
                     };
 
                     ws.onmessage = function(event) {
-                        const message = event.data; // Recebe a mensagem como texto
-                        console.log('Nova mensagem do Telegram:', message); // Log para verificação
+                        const message = event.data;
+                        console.log('Nova mensagem do Telegram:', message);
                         const messagesDiv = document.getElementById('messages');
                         messagesDiv.innerHTML += \`<p>\${message}</p>\`;
-                        messagesDiv.scrollTop = messagesDiv.scrollHeight; // Rolagem automática
+                        messagesDiv.scrollTop = messagesDiv.scrollHeight;
                     };
 
                     ws.onclose = function() {
@@ -91,33 +91,26 @@ const wss = new WebSocketServer({ server });
 wss.on('connection', (ws) => {
     console.log('Cliente conectado');
 
-    const enviarMensagens = () => {
-        if (mensagens.length > 0) {
-            mensagens.forEach(msg => {
-                ws.send(msg);
-            });
-        }
-    };
-
-    enviarMensagens();
+    // Enviar mensagens pendentes ao novo cliente
+    mensagens.forEach(msg => {
+        ws.send(msg);
+    });
 
     ws.on('close', () => {
         console.log('Cliente desconectado');
     });
 });
 
-app.post('/webhook', async (req, res) => {
+app.post('/webhook', (req, res) => {
     console.log('Corpo da requisição recebido:', JSON.stringify(req.body, null, 2));
 
     const message = req.body.message || req.body.edited_channel_post || req.body.channel_post;
 
-    // Verifique se a mensagem é do canal correto
     if (message && message.chat && message.chat.id === -1002121843991 && message.text) {
         const text = message.text;
         mensagens.push(text);
         console.log(`Mensagem recebida do canal: ${text}`);
 
-        // Enviar a mensagem a todos os clientes WebSocket conectados
         wss.clients.forEach((client) => {
             if (client.readyState === client.OPEN) {
                 client.send(text);
@@ -125,9 +118,9 @@ app.post('/webhook', async (req, res) => {
             }
         });
 
-        return res.sendStatus(200); // Retorna 200 OK após processar a mensagem
+        return res.sendStatus(200);
     } else {
         console.error('Mensagem não encontrada no corpo da requisição ou não é do canal');
-        return res.sendStatus(400); // Retorna 400 Bad Request
+        return res.sendStatus(400);
     }
 });
