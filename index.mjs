@@ -60,14 +60,12 @@ app.get('/', (req, res) => {
 
                     ws.onopen = function() {
                         console.log('Conectado ao servidor WebSocket');
-                        
-                        // Mecanismo de keep-alive
                         keepAlive = setInterval(() => {
                             if (ws.readyState === WebSocket.OPEN) {
                                 console.log('Enviando ping');
-                                ws.send('ping'); // Envia um ping para manter a conexão
+                                ws.send('ping');
                             }
-                        }, 30000); // A cada 30 segundos
+                        }, 30000);
                     };
 
                     ws.onmessage = function(event) {
@@ -80,7 +78,7 @@ app.get('/', (req, res) => {
 
                     ws.onclose = function() {
                         console.log('Conexão WebSocket encerrada. Tentando reconectar...');
-                        clearInterval(keepAlive); // Limpa o intervalo de keep-alive
+                        clearInterval(keepAlive);
                         setTimeout(conectarWebSocket, 2000);
                     };
 
@@ -101,7 +99,6 @@ const wss = new WebSocketServer({ server });
 wss.on('connection', (ws) => {
     console.log('Cliente conectado');
 
-    // Enviar mensagens pendentes ao novo cliente
     mensagens.forEach(msg => {
         ws.send(msg);
     });
@@ -116,33 +113,33 @@ app.post('/webhook', (req, res) => {
 
     const message = req.body.message || req.body.channel_post || req.body.edited_channel_post;
 
-    // Verifique se a mensagem é do canal e se existe texto
-    if (message && message.chat && message.chat.id === -1002121843991) {
-        if (message.text) {
-            const text = message.text;
-            mensagens.push(text);
-            console.log(`Mensagem recebida do canal: ${text}`);
-            
-            // Verifique se o sender_chat é do bot
-            if (message.sender_chat && message.sender_chat.id) {
-                console.log(`Mensagem enviada pelo bot: ${message.sender_chat.title}`);
+    if (message) {
+        console.log('Mensagem encontrada:', message); // Log da mensagem recebida
+        console.log('ID do chat:', message.chat.id); // Log do ID do chat
+
+        if (message.chat.id === -1002121843991) { // Verifique o ID do canal
+            if (message.text) {
+                const text = message.text;
+                mensagens.push(text);
+                console.log(`Mensagem recebida do canal: ${text}`);
+
+                wss.clients.forEach((client) => {
+                    if (client.readyState === client.OPEN) {
+                        client.send(text);
+                        console.log(`Mensagem enviada ao cliente WebSocket: ${text}`);
+                    }
+                });
+
+                return res.sendStatus(200);
+            } else {
+                console.error('Mensagem não contém texto');
             }
-
-            // Envia a mensagem para todos os clientes conectados via WebSocket
-            wss.clients.forEach((client) => {
-                if (client.readyState === client.OPEN) {
-                    client.send(text);
-                    console.log(`Mensagem enviada ao cliente WebSocket: ${text}`);
-                }
-            });
-
-            return res.sendStatus(200);
         } else {
-            console.error('Mensagem não contém texto');
-            return res.sendStatus(400);
+            console.error(`Mensagem não é do canal esperado. ID recebido: ${message.chat.id}`);
         }
     } else {
-        console.error('Mensagem não encontrada no corpo da requisição ou não é do canal');
-        return res.sendStatus(400);
+        console.error('Nenhuma mensagem encontrada no corpo da requisição');
     }
+
+    return res.sendStatus(400);
 });
