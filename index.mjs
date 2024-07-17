@@ -13,7 +13,7 @@ const server = app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 
     // Configurar o webhook do Telegram
-    const urlWebhook = `https://api.telegram.org/bot${process.env.7377232961:AAFAjIK6cV0ZHEwmRDgqdW_TtLeADyGAJDs}/setWebhook?url=https://telegramheroku-87abbc9dd2f9.herokuapp.com/webhook`;
+    const urlWebhook = `https://api.telegram.org/bot7377232961:AAFAjIK6cV0ZHEwmRDgqdW_TtLeADyGAJDs/setWebhook?url=https://telegramheroku-87abbc9dd2f9.herokuapp.com/webhook`;
 
     fetch(urlWebhook)
         .then(response => response.json())
