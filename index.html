@@ -2,7 +2,6 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bot Telegram</title>
     <style>
@@ -41,9 +40,7 @@
 
             ws.onmessage = function(event) {
                 const messagesDiv = document.getElementById('messages');
-                const messageElement = document.createElement('p');
-                messageElement.textContent = event.data;
-                messagesDiv.appendChild(messageElement);
+                messagesDiv.innerHTML += `<p>${event.data}</p>`;
                 messagesDiv.scrollTop = messagesDiv.scrollHeight; // Rolagem automática
             };
 
