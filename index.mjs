@@ -94,29 +94,34 @@ wss.on('connection', (ws) => {
 });
 
 app.post('/webhook', (req, res) => {
-    console.log('Corpo da requisição recebido:', JSON.stringify(req.body, null, 2));
-    const message = req.body.message || req.body.channel_post || req.body.edited_channel_post;
+    try {
+        console.log('Corpo da requisição recebido:', JSON.stringify(req.body, null, 2));
+        const message = req.body.message || req.body.channel_post || req.body.edited_channel_post;
 
-    if (message && message.chat && message.chat.id === -1002121843991) {
-        console.log('Mensagem encontrada:', message);
-        if (message.text) {
-            const text = message.text;
-            mensagens.push(text);
-            console.log(`Mensagem recebida do canal: ${text}`);
+        if (message && message.chat && message.chat.id === -1002121843991) {
+            console.log('Mensagem encontrada:', message);
+            if (message.text) {
+                const text = message.text;
+                mensagens.push(text);
+                console.log(`Mensagem recebida do canal: ${text}`);
 
-            wss.clients.forEach(client => {
-                if (client.readyState === client.OPEN) {
-                    client.send(text);
-                }
-            });
+                wss.clients.forEach(client => {
+                    if (client.readyState === client.OPEN) {
+                        client.send(text);
+                    }
+                });
 
-            return res.sendStatus(200);
+                return res.sendStatus(200);
+            } else {
+                console.error('Mensagem não contém texto');
+            }
         } else {
-            console.error('Mensagem não contém texto');
+            console.error('Mensagem não é do canal esperado ou inválida.');
         }
-    } else {
-        console.error('Mensagem não é do canal esperado ou inválida.');
-    }
 
-    return res.sendStatus(400);
+        return res.sendStatus(400);
+    } catch (error) {
+        console.error('Erro ao processar a mensagem do webhook:', error);
+        return res.sendStatus(500);
+    }
 });
