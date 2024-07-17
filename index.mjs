@@ -122,6 +122,12 @@ app.post('/webhook', (req, res) => {
         mensagens.push(text);
         console.log(`Mensagem recebida do canal: ${text}`);
 
+        // Verifique se o sender_chat é do bot
+        if (message.sender_chat && message.sender_chat.id) {
+            console.log(`Mensagem enviada pelo bot: ${message.sender_chat.title}`);
+        }
+
+        // Envia a mensagem para todos os clientes conectados via WebSocket
         wss.clients.forEach((client) => {
             if (client.readyState === client.OPEN) {
                 client.send(text);
