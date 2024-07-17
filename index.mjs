@@ -34,18 +34,8 @@ app.get('/', (req, res) => {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Chat Telegram</title>
             <style>
-                body {
-                    font-family: Arial, sans-serif;
-                    margin: 0;
-                    padding: 20px;
-                }
-                #messages {
-                    border: 1px solid #ccc;
-                    padding: 10px;
-                    height: 300px;
-                    overflow-y: scroll;
-                    margin-bottom: 20px;
-                }
+                body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+                #messages { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll; margin-bottom: 20px; }
             </style>
         </head>
         <body>
@@ -62,7 +52,6 @@ app.get('/', (req, res) => {
                         console.log('Conectado ao servidor WebSocket');
                         keepAlive = setInterval(() => {
                             if (ws.readyState === WebSocket.OPEN) {
-                                console.log('Enviando ping');
                                 ws.send('ping');
                             }
                         }, 30000);
@@ -70,7 +59,6 @@ app.get('/', (req, res) => {
 
                     ws.onmessage = function(event) {
                         const message = event.data;
-                        console.log('Nova mensagem do Telegram:', message);
                         const messagesDiv = document.getElementById('messages');
                         messagesDiv.innerHTML += \`<p>\${message}</p>\`;
                         messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -98,10 +86,7 @@ const wss = new WebSocketServer({ server });
 
 wss.on('connection', (ws) => {
     console.log('Cliente conectado');
-
-    mensagens.forEach(msg => {
-        ws.send(msg);
-    });
+    mensagens.forEach(msg => ws.send(msg));
 
     ws.on('close', () => {
         console.log('Cliente desconectado');
@@ -110,35 +95,27 @@ wss.on('connection', (ws) => {
 
 app.post('/webhook', (req, res) => {
     console.log('Corpo da requisição recebido:', JSON.stringify(req.body, null, 2));
-
     const message = req.body.message || req.body.channel_post || req.body.edited_channel_post;
 
-    if (message) {
-        console.log('Mensagem encontrada:', message); // Log da mensagem recebida
-        console.log('ID do chat:', message.chat.id); // Log do ID do chat
+    if (message && message.chat && message.chat.id === -1002121843991) {
+        console.log('Mensagem encontrada:', message);
+        if (message.text) {
+            const text = message.text;
+            mensagens.push(text);
+            console.log(`Mensagem recebida do canal: ${text}`);
 
-        if (message.chat.id === -1002121843991) { // Verifique o ID do canal
-            if (message.text) {
-                const text = message.text;
-                mensagens.push(text);
-                console.log(`Mensagem recebida do canal: ${text}`);
+            wss.clients.forEach(client => {
+                if (client.readyState === client.OPEN) {
+                    client.send(text);
+                }
+            });
 
-                wss.clients.forEach((client) => {
-                    if (client.readyState === client.OPEN) {
-                        client.send(text);
-                        console.log(`Mensagem enviada ao cliente WebSocket: ${text}`);
-                    }
-                });
-
-                return res.sendStatus(200);
-            } else {
-                console.error('Mensagem não contém texto');
-            }
+            return res.sendStatus(200);
         } else {
-            console.error(`Mensagem não é do canal esperado. ID recebido: ${message.chat.id}`);
+            console.error('Mensagem não contém texto');
         }
     } else {
-        console.error('Nenhuma mensagem encontrada no corpo da requisição');
+        console.error('Mensagem não é do canal esperado ou inválida.');
     }
 
     return res.sendStatus(400);
