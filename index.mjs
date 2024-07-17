@@ -114,26 +114,24 @@ wss.on('connection', (ws) => {
 app.post('/webhook', (req, res) => {
     console.log('Corpo da requisição recebido:', JSON.stringify(req.body, null, 2));
 
-    const message = req.body.message || req.body.edited_channel_post || req.body.channel_post;
+    const message = req.body.message || req.body.channel_post || req.body.edited_channel_post;
 
-    if (message) {
-        const text = message.text || message.caption || ''; // Captura texto ou legenda
-        if (text) {
-            mensagens.push(text);
-            console.log(`Mensagem recebida: ${text}`);
+    // Verifique se a mensagem é do canal e se existe texto
+    if (message && message.chat && message.chat.id === -1002121843991 && message.text) {
+        const text = message.text;
+        mensagens.push(text);
+        console.log(`Mensagem recebida do canal: ${text}`);
 
-            // Envia a mensagem a todos os clientes conectados
-            wss.clients.forEach((client) => {
-                if (client.readyState === client.OPEN) {
-                    client.send(text);
-                    console.log(`Mensagem enviada ao cliente WebSocket: ${text}`);
-                }
-            });
-        }
+        wss.clients.forEach((client) => {
+            if (client.readyState === client.OPEN) {
+                client.send(text);
+                console.log(`Mensagem enviada ao cliente WebSocket: ${text}`);
+            }
+        });
 
         return res.sendStatus(200);
     } else {
-        console.error('Mensagem não encontrada no corpo da requisição');
+        console.error('Mensagem não encontrada no corpo da requisição ou não é do canal');
         return res.sendStatus(400);
     }
 });
