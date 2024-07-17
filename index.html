@@ -18,15 +18,20 @@
             margin-bottom: 20px;
         }
     </style>
-</head>
-<body>
-    <h1>Mensagens do Telegram</h1>
-    <div id="messages"></div>
-    <script>
-        const ws = new WebSocket('wss://telegramheroku-87abbc9dd2f9.herokuapp.com');
+<script>
+    let ws;
+    let pingInterval;
+
+    function conectarWebSocket() {
+        ws = new WebSocket('wss://telegramheroku-87abbc9dd2f9.herokuapp.com');
 
         ws.onopen = function() {
             console.log('Conectado ao servidor WebSocket');
+            pingInterval = setInterval(() => {
+                if (ws.readyState === WebSocket.OPEN) {
+                    ws.send('ping');
+                }
+            }, 30000); // Envia um ping a cada 30 segundos
         };
 
         ws.onmessage = function(event) {
@@ -36,8 +41,18 @@
         };
 
         ws.onclose = function() {
-            console.log('Conexão WebSocket encerrada');
+            console.log('Conexão WebSocket encerrada. Tentando reconectar...');
+            clearInterval(pingInterval); // Limpa o intervalo de ping
+            setTimeout(conectarWebSocket, 2000); // Tenta reconectar após 2 segundos
         };
-    </script>
+
+        ws.onerror = function(error) {
+            console.error('Erro no WebSocket:', error);
+            ws.close(); // Fecha a conexão em caso de erro
+        };
+    }
+
+    conectarWebSocket();
+</script>
 </body>
 </html>

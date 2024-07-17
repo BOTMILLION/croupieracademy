@@ -116,21 +116,24 @@ app.post('/webhook', (req, res) => {
 
     const message = req.body.message || req.body.edited_channel_post || req.body.channel_post;
 
-    if (message && message.chat && message.chat.id === -1002121843991 && message.text) {
-        const text = message.text;
-        mensagens.push(text);
-        console.log(`Mensagem recebida do canal: ${text}`);
+    if (message) {
+        const text = message.text || message.caption || ''; // Captura texto ou legenda
+        if (text) {
+            mensagens.push(text);
+            console.log(`Mensagem recebida: ${text}`);
 
-        wss.clients.forEach((client) => {
-            if (client.readyState === client.OPEN) {
-                client.send(text);
-                console.log(`Mensagem enviada ao cliente WebSocket: ${text}`);
-            }
-        });
+            // Envia a mensagem a todos os clientes conectados
+            wss.clients.forEach((client) => {
+                if (client.readyState === client.OPEN) {
+                    client.send(text);
+                    console.log(`Mensagem enviada ao cliente WebSocket: ${text}`);
+                }
+            });
+        }
 
         return res.sendStatus(200);
     } else {
-        console.error('Mensagem não encontrada no corpo da requisição ou não é do canal');
+        console.error('Mensagem não encontrada no corpo da requisição');
         return res.sendStatus(400);
     }
 });
