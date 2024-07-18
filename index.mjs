@@ -101,6 +101,17 @@ wss.on('connection', (ws) => {
 
     enviarMensagens();
 
+    ws.on('message', (data) => {
+        console.log('Mensagem recebida do Telegram:', data); // Log para verificar o recebimento da mensagem
+        // Enviar mensagem para o WebSocket
+        wss.clients.forEach(client => {
+            if (client.readyState === client.OPEN) {
+                client.send(data);
+                console.log(`Mensagem enviada ao cliente: ${data}`);
+            }
+        });
+    });
+
     ws.on('close', () => {
         console.log('Cliente desconectado');
     });
