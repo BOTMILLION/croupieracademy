@@ -9,7 +9,7 @@ app.use(express.json());
 
 let mensagens = [];
 
-// Iniciar o servidor
+// Configurar o servidor HTTP
 const server = app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 
@@ -57,7 +57,7 @@ app.get('/', (req, res) => {
                 let ws;
 
                 function conectarWebSocket() {
-                    ws = new WebSocket('wss://telegramheroku-87abbc9dd2f9.herokuapp.com');
+                    ws = new WebSocket('wss://telegramheroku-87abbc9dd2f9.herokuapp.com/');
 
                     ws.onopen = function() {
                         console.log('Conectado ao servidor WebSocket');
@@ -90,7 +90,7 @@ app.get('/', (req, res) => {
 const wss = new WebSocketServer({ server });
 
 wss.on('connection', (ws) => {
-    console.log('Cliente conectado');
+    console.log('Cliente WebSocket conectado');
 
     // Função para manter a conexão ativa
     const manterConexaoAtiva = () => {
@@ -101,15 +101,6 @@ wss.on('connection', (ws) => {
     };
 
     manterConexaoAtiva();
-
-    const enviarMensagens = () => {
-        if (mensagens.length > 0) {
-            const ultimaMensagem = mensagens[mensagens.length - 1];
-            ws.send(ultimaMensagem);
-        }
-    };
-
-    enviarMensagens();
 
     ws.on('message', (data) => {
         console.log('Mensagem recebida do Telegram:', data); // Log para verificar o recebimento da mensagem
@@ -123,12 +114,17 @@ wss.on('connection', (ws) => {
     });
 
     ws.on('close', () => {
-        console.log('Cliente desconectado');
+        console.log('Cliente WebSocket desconectado');
+    });
+
+    ws.on('error', (error) => {
+        console.error('Erro no WebSocket:', error);
     });
 });
 
 // Endpoint para o webhook
 app.post('/webhook', async (req, res) => {
+    console.log('Cabeçalhos da requisição:', req.headers);
     console.log('Corpo da requisição recebido:', req.body);
 
     // Verificar se a requisição contém uma mensagem ou um post de canal
