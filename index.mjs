@@ -92,6 +92,16 @@ const wss = new WebSocketServer({ server });
 wss.on('connection', (ws) => {
     console.log('Cliente conectado');
 
+    // Função para manter a conexão ativa
+    const manterConexaoAtiva = () => {
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.ping(); // Envia um ping para manter a conexão ativa
+            setTimeout(manterConexaoAtiva, 30000); // Verifica a cada 30 segundos
+        }
+    };
+
+    manterConexaoAtiva();
+
     const enviarMensagens = () => {
         if (mensagens.length > 0) {
             const ultimaMensagem = mensagens[mensagens.length - 1];
