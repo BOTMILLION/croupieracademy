@@ -9,6 +9,7 @@ app.use(express.json());
 
 let mensagens = [];
 
+// Iniciar o servidor
 const server = app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 
@@ -25,6 +26,7 @@ const server = app.listen(PORT, () => {
         });
 });
 
+// Página inicial
 app.get('/', (req, res) => {
     res.send(`
         <!DOCTYPE html>
@@ -84,6 +86,7 @@ app.get('/', (req, res) => {
     `);
 });
 
+// Configurar o WebSocket
 const wss = new WebSocketServer({ server });
 
 wss.on('connection', (ws) => {
@@ -103,12 +106,14 @@ wss.on('connection', (ws) => {
     });
 });
 
+// Endpoint para o webhook
 app.post('/webhook', async (req, res) => {
     console.log('Corpo da requisição recebido:', req.body);
 
-    const message = req.body.message;
+    // Verificar se a requisição contém uma mensagem ou um post de canal
+    const message = req.body.message || req.body.channel_post;
 
-    if (message) {
+    if (message && message.text) {
         const text = message.text;
         mensagens.push(text);
         console.log(`Mensagem recebida: ${text}`);
@@ -116,7 +121,7 @@ app.post('/webhook', async (req, res) => {
         wss.clients.forEach((client) => {
             if (client.readyState === client.OPEN) {
                 client.send(text);
-                console.log(`Mensagem enviada ao cliente: ${text}`); // Log adicional para confirmação
+                console.log(`Mensagem enviada ao cliente: ${text}`);
             }
         });
 
