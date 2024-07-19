@@ -8,20 +8,42 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
         }
-        #messages {
+        #message {
             border: 1px solid #ccc;
             padding: 10px;
-            height: 300px;
-            overflow-y: scroll;
-            margin-bottom: 20px;
+            height: 40vh;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin: 10px;
+        }
+        iframe {
+            flex: 1;
+            width: 100%;
+            border: none;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
     </style>
 </head>
 <body>
-    <h1>Bem-vindo ao Chat Telegram</h1>
-    <div id="messages"></div>
+    <div class="container">
+        <h1 style="text-align: center; padding: 10px;">Bem-vindo ao Chat Telegram</h1>
+        <p id="message">Aguardando mensagens...</p>
+        <iframe src="https://www.seubet.com/cassino-ao-vivo/slots/all/28/evolution/8267-217032-football-studio?mode=real&btag=1994735" title="Cassino ao Vivo"></iframe>
+    </div>
     <script>
         let ws;
 
@@ -33,24 +55,22 @@
             };
 
             ws.onmessage = function(event) {
-                const messagesDiv = document.getElementById('messages');
+                const messageP = document.getElementById('message');
 
                 if (event.data instanceof Blob) {
                     const reader = new FileReader();
                     reader.onload = function() {
                         const message = reader.result;
-                        console.log('Mensagem recebida do WebSocket:', message);
                         if (message !== 'ping') { // Ignora mensagens de ping
-                            messagesDiv.innerHTML += `<p>${message}</p>`;
-                            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                            messageP.textContent = message; // Substitui a mensagem atual
+                            messageP.scrollTop = messageP.scrollHeight; // Garante que a rolagem vai para o fim
                         }
                     };
                     reader.readAsText(event.data);
                 } else {
-                    console.log('Mensagem recebida do WebSocket:', event.data);
                     if (event.data !== 'ping') { // Ignora mensagens de ping
-                        messagesDiv.innerHTML += `<p>${event.data}</p>`;
-                        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                        messageP.textContent = event.data; // Substitui a mensagem atual
+                        messageP.scrollTop = messageP.scrollHeight; // Garante que a rolagem vai para o fim
                     }
                 }
             };
