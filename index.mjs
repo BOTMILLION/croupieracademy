@@ -55,7 +55,7 @@ app.get('/', (req, res) => {
             <div id="messages"></div>
             <script>
                 let ws;
-
+                
                 function conectarWebSocket() {
                     ws = new WebSocket('wss://telegramheroku-87abbc9dd2f9.herokuapp.com/');
 
@@ -65,6 +65,7 @@ app.get('/', (req, res) => {
 
                     ws.onmessage = function(event) {
                         const messagesDiv = document.getElementById('messages');
+                        // Use innerHTML para permitir a renderização de HTML
                         messagesDiv.innerHTML += \`<p>\${event.data}</p>\`;
                         messagesDiv.scrollTop = messagesDiv.scrollHeight;
                     };
