@@ -87,9 +87,21 @@ app.get('/', (req, res) => {
 
                     ws.onmessage = function(event) {
                         const messagesDiv = document.getElementById('messages');
-                        console.log('Mensagem recebida do WebSocket:', event.data);
-                        messagesDiv.innerHTML += \`<p>\${event.data}</p>\`;
-                        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+                        if (event.data instanceof Blob) {
+                            const reader = new FileReader();
+                            reader.onload = function() {
+                                const message = reader.result;
+                                console.log('Mensagem recebida do WebSocket:', message);
+                                messagesDiv.innerHTML += \`<p>\${message}</p>\`;
+                                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                            };
+                            reader.readAsText(event.data);
+                        } else {
+                            console.log('Mensagem recebida do WebSocket:', event.data);
+                            messagesDiv.innerHTML += \`<p>\${event.data}</p>\`;
+                            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                        }
                     };
 
                     ws.onclose = function() {
