@@ -94,7 +94,7 @@ wss.on('connection', (ws) => {
 
     // Função para manter a conexão ativa
     const manterConexaoAtiva = () => {
-        if (ws.readyState === WebSocket.OPEN) {
+        if (ws.readyState === ws.OPEN) {
             ws.ping(); // Envia um ping para manter a conexão ativa
             setTimeout(manterConexaoAtiva, 30000); // Verifica a cada 30 segundos
         }

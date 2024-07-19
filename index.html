@@ -27,33 +27,40 @@
         let pingInterval;
 
         function conectarWebSocket() {
-            ws = new WebSocket('wss://telegramheroku-87abbc9dd2f9.herokuapp.com');
+            try {
+                ws = new WebSocket('wss://telegramheroku-87abbc9dd2f9.herokuapp.com');
 
-            ws.onopen = function() {
-                console.log('Conectado ao servidor WebSocket');
-                pingInterval = setInterval(() => {
-                    if (ws.readyState === WebSocket.OPEN) {
-                        ws.send('ping');
-                    }
-                }, 30000); // Envia um ping a cada 30 segundos
-            };
+                ws.onopen = function() {
+                    console.log('Conectado ao servidor WebSocket');
+                    // Enviar um ping a cada 30 segundos para manter a conexão ativa
+                    pingInterval = setInterval(() => {
+                        if (ws.readyState === WebSocket.OPEN) {
+                            ws.send('ping');
+                        }
+                    }, 30000);
+                };
 
-            ws.onmessage = function(event) {
-                const messagesDiv = document.getElementById('messages');
-                messagesDiv.innerHTML += `<p>${event.data}</p>`;
-                messagesDiv.scrollTop = messagesDiv.scrollHeight; // Rolagem automática
-            };
+                ws.onmessage = function(event) {
+                    const messagesDiv = document.getElementById('messages');
+                    const novaMensagem = document.createElement('p');
+                    novaMensagem.textContent = event.data;
+                    messagesDiv.appendChild(novaMensagem);
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight; // Rolagem automática para a última mensagem
+                };
 
-            ws.onclose = function() {
-                console.log('Conexão WebSocket encerrada. Tentando reconectar...');
-                clearInterval(pingInterval); // Limpa o intervalo de ping
-                setTimeout(conectarWebSocket, 2000); // Tenta reconectar após 2 segundos
-            };
+                ws.onclose = function() {
+                    console.log('Conexão WebSocket encerrada. Tentando reconectar...');
+                    clearInterval(pingInterval); // Limpa o intervalo de ping
+                    setTimeout(conectarWebSocket, 2000); // Tenta reconectar após 2 segundos
+                };
 
-            ws.onerror = function(error) {
-                console.error('Erro no WebSocket:', error);
-                ws.close(); // Fecha a conexão em caso de erro
-            };
+                ws.onerror = function(error) {
+                    console.error('Erro no WebSocket:', error);
+                    ws.close(); // Fecha a conexão em caso de erro
+                };
+            } catch (error) {
+                console.error('Erro ao conectar ao WebSocket:', error);
+            }
         }
 
         conectarWebSocket();
