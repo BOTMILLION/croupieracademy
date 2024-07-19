@@ -1,0 +1,96 @@
+[2024-07-19T04:35:50.455Z] Servidor rodando na porta 3000
+[2024-07-19T04:35:51.257Z] Webhook configurado:
+[2024-07-19T04:35:51.257Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T04:50:29.034Z] Servidor rodando na porta 3000
+[2024-07-19T04:50:29.819Z] Webhook configurado:
+[2024-07-19T04:50:29.819Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T04:51:36.768Z] Servidor rodando na porta 3000
+[2024-07-19T04:51:37.580Z] Webhook configurado:
+[2024-07-19T04:51:37.580Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T05:05:23.861Z] Servidor rodando na porta 3000
+[2024-07-19T05:05:24.694Z] Webhook configurado:
+[2024-07-19T05:05:24.694Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T05:17:06.669Z] Servidor rodando na porta 3000
+[2024-07-19T05:17:07.445Z] Webhook configurado:
+[2024-07-19T05:17:07.445Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T05:22:42.344Z] Servidor rodando na porta 3000
+[2024-07-19T05:22:43.139Z] Webhook configurado:
+[2024-07-19T05:22:43.139Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T05:26:26.048Z] Servidor rodando na porta 3000
+[2024-07-19T05:26:26.838Z] Webhook configurado:
+[2024-07-19T05:26:26.838Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T05:28:14.492Z] Servidor rodando na porta 3000
+[2024-07-19T05:28:15.309Z] Webhook configurado:
+[2024-07-19T05:28:15.309Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T05:29:45.471Z] Exceção não capturada:
+[2024-07-19T05:29:45.471Z] ERROR: Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1898:16)
+    at listenInCluster (node:net:1946:12)
+    at Server.listen (node:net:2044:7)
+    at Function.listen (C:\Users\Italo\Documents\ROBOS\site\bottelegram\meu-bot-telegram\node_modules\express\lib\application.js:635:24)
+    at file:///C:/Users/Italo/Documents/ROBOS/site/bottelegram/meu-bot-telegram/index.mjs:35:20
+    at ModuleJob.run (node:internal/modules/esm/module_job:222:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:316:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:123:5)
+[2024-07-19T05:29:53.063Z] Exceção não capturada:
+[2024-07-19T05:29:53.063Z] ERROR: Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1898:16)
+    at listenInCluster (node:net:1946:12)
+    at Server.listen (node:net:2044:7)
+    at Function.listen (C:\Users\Italo\Documents\ROBOS\site\bottelegram\meu-bot-telegram\node_modules\express\lib\application.js:635:24)
+    at file:///C:/Users/Italo/Documents/ROBOS/site/bottelegram/meu-bot-telegram/index.mjs:35:20
+    at ModuleJob.run (node:internal/modules/esm/module_job:222:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:316:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:123:5)
+[2024-07-19T05:30:01.598Z] Servidor rodando na porta 3000
+[2024-07-19T05:30:02.419Z] Webhook configurado:
+[2024-07-19T05:30:02.419Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T05:32:09.502Z] Servidor rodando na porta 3000
+[2024-07-19T05:32:10.322Z] Webhook configurado:
+[2024-07-19T05:32:10.322Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T13:47:23.105Z] Servidor rodando na porta 3000
+[2024-07-19T13:47:25.053Z] Webhook configurado:
+[2024-07-19T13:47:25.053Z] ERROR: {"ok":true,"result":true,"description":"Webhook was set"}
+[2024-07-19T13:53:27.431Z] Servidor rodando na porta 3000
+[2024-07-19T13:53:28.234Z] Webhook configurado:
+[2024-07-19T13:53:28.234Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T13:56:03.724Z] Servidor rodando na porta 3000
+[2024-07-19T13:56:04.520Z] Webhook configurado:
+[2024-07-19T13:56:04.520Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T14:01:06.286Z] Exceção não capturada:
+[2024-07-19T14:01:06.286Z] ERROR: Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1898:16)
+    at listenInCluster (node:net:1946:12)
+    at Server.listen (node:net:2044:7)
+    at Function.listen (C:\Users\Italo\Documents\ROBOS\site\bottelegram\meu-bot-telegram\node_modules\express\lib\application.js:635:24)
+    at file:///C:/Users/Italo/Documents/ROBOS/site/bottelegram/meu-bot-telegram/index.mjs:35:20
+    at ModuleJob.run (node:internal/modules/esm/module_job:222:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:316:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:123:5)
+[2024-07-19T14:01:38.220Z] Servidor rodando na porta 3000
+[2024-07-19T14:01:39.015Z] Webhook configurado:
+[2024-07-19T14:01:39.015Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T14:07:31.422Z] Servidor rodando na porta 3000
+[2024-07-19T14:07:32.216Z] Webhook configurado:
+[2024-07-19T14:07:32.216Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T14:13:53.056Z] Servidor rodando na porta 3000
+[2024-07-19T14:13:53.856Z] Webhook configurado:
+[2024-07-19T14:13:53.856Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T14:20:17.981Z] Servidor rodando na porta 3000
+[2024-07-19T14:20:18.785Z] Webhook configurado:
+[2024-07-19T14:20:18.785Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T14:26:04.471Z] Servidor rodando na porta 3000
+[2024-07-19T14:26:05.273Z] Webhook configurado:
+[2024-07-19T14:26:05.273Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T14:35:39.267Z] Servidor rodando na porta 3000
+[2024-07-19T14:35:40.062Z] Webhook configurado:
+[2024-07-19T14:35:40.062Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T14:37:25.257Z] Servidor rodando na porta 3000
+[2024-07-19T14:37:26.044Z] Webhook configurado:
+[2024-07-19T14:37:26.044Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T14:41:48.337Z] Servidor rodando na porta 3000
+[2024-07-19T14:41:49.128Z] Webhook configurado:
+[2024-07-19T14:41:49.128Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T14:47:24.908Z] Servidor rodando na porta 3000
+[2024-07-19T14:47:25.688Z] Webhook configurado:
+[2024-07-19T14:47:25.688Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
