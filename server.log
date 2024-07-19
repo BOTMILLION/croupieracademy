@@ -97,3 +97,6 @@
 [2024-07-19T16:31:30.001Z] Servidor rodando na porta 3000
 [2024-07-19T16:31:30.993Z] Webhook configurado:
 [2024-07-19T16:31:30.993Z] ERROR: {"ok":true,"result":true,"description":"Webhook was set"}
+[2024-07-19T16:37:46.768Z] Servidor rodando na porta 3000
+[2024-07-19T16:37:47.598Z] Webhook configurado:
+[2024-07-19T16:37:47.598Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}

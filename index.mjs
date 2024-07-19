@@ -93,14 +93,18 @@ app.get('/', (req, res) => {
                             reader.onload = function() {
                                 const message = reader.result;
                                 console.log('Mensagem recebida do WebSocket:', message);
-                                messagesDiv.innerHTML += \`<p>\${message}</p>\`;
-                                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                                if (message !== 'ping') { // Ignora mensagens de ping
+                                    messagesDiv.innerHTML += \`<p>\${message}</p>\`;
+                                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                                }
                             };
                             reader.readAsText(event.data);
                         } else {
                             console.log('Mensagem recebida do WebSocket:', event.data);
-                            messagesDiv.innerHTML += \`<p>\${event.data}</p>\`;
-                            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                            if (event.data !== 'ping') { // Ignora mensagens de ping
+                                messagesDiv.innerHTML += \`<p>\${event.data}</p>\`;
+                                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                            }
                         }
                     };
 
@@ -137,6 +141,11 @@ wss.on('connection', (ws) => {
     manterConexaoAtiva();
 
     ws.on('message', (data) => {
+        if (data === 'ping') {
+            log('Recebido ping do cliente WebSocket');
+            return; // Ignora mensagens de ping
+        }
+
         log('Mensagem recebida do WebSocket:', data);
         // Enviar mensagem para todos os clientes conectados
         wss.clients.forEach(client => {
