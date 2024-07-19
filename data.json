@@ -1,8 +1,5 @@
 {
-    "message": {
-        "chat": {
-            "id": 123456789
-        },
-        "text": "Olá, mundo!"
-    }
+  "chat_id": "-1002121843991",
+  "text": "<b>Mensagem em negrito</b>\n<i>Mensagem em itálico</i>",
+  "parse_mode": "HTML"
 }

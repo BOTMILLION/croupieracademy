@@ -55,7 +55,7 @@ app.get('/', (req, res) => {
             <div id="messages"></div>
             <script>
                 let ws;
-                
+
                 function conectarWebSocket() {
                     ws = new WebSocket('wss://telegramheroku-87abbc9dd2f9.herokuapp.com/');
 
