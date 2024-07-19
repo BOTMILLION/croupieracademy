@@ -90,7 +90,7 @@ app.get('/', (req, res) => {
 const wss = new WebSocketServer({ server });
 
 wss.on('connection', (ws) => {
-    console.log('Cliente WebSocket conectado');
+    console.log('Cliente conectado');
 
     // Função para manter a conexão ativa
     const manterConexaoAtiva = () => {
@@ -114,7 +114,7 @@ wss.on('connection', (ws) => {
     });
 
     ws.on('close', () => {
-        console.log('Cliente WebSocket desconectado');
+        console.log('Cliente desconectado');
     });
 
     ws.on('error', (error) => {
@@ -124,27 +124,40 @@ wss.on('connection', (ws) => {
 
 // Endpoint para o webhook
 app.post('/webhook', async (req, res) => {
-    console.log('Cabeçalhos da requisição:', req.headers);
-    console.log('Corpo da requisição recebido:', req.body);
+    try {
+        console.log('Corpo da requisição recebido:', req.body);
 
-    // Verificar se a requisição contém uma mensagem ou um post de canal
-    const message = req.body.message || req.body.channel_post;
+        // Verificar se a requisição contém uma mensagem ou um post de canal
+        const message = req.body.message || req.body.channel_post;
 
-    if (message && message.text) {
-        const text = message.text;
-        mensagens.push(text);
-        console.log(`Mensagem recebida: ${text}`);
+        if (message && message.text) {
+            const text = message.text;
+            mensagens.push(text);
+            console.log(`Mensagem recebida: ${text}`);
 
-        wss.clients.forEach((client) => {
-            if (client.readyState === client.OPEN) {
-                client.send(text);
-                console.log(`Mensagem enviada ao cliente: ${text}`);
-            }
-        });
+            wss.clients.forEach((client) => {
+                if (client.readyState === client.OPEN) {
+                    client.send(text);
+                    console.log(`Mensagem enviada ao cliente: ${text}`);
+                }
+            });
 
-        return res.sendStatus(200); // Retorna 200 OK após processar a mensagem
-    } else {
-        console.error('Mensagem não encontrada no corpo da requisição');
-        return res.sendStatus(400); // Retorna 400 Bad Request se a mensagem não estiver presente
+            return res.sendStatus(200); // Retorna 200 OK após processar a mensagem
+        } else {
+            console.error('Mensagem não encontrada no corpo da requisição');
+            return res.sendStatus(400); // Retorna 400 Bad Request se a mensagem não estiver presente
+        }
+    } catch (error) {
+        console.error('Erro ao processar o webhook:', error);
+        return res.sendStatus(500); // Retorna 500 Internal Server Error em caso de exceção
     }
+});
+
+// Tratamento global de erros
+process.on('uncaughtException', (err) => {
+    console.error('Exceção não capturada:', err);
+});
+
+process.on('unhandledRejection', (err) => {
+    console.error('Rejeição de promessa não tratada:', err);
 });
