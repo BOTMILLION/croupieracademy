@@ -1,5 +1,5 @@
 {
   "chat_id": "-1002121843991",
-  "text": "<b>Mensagem em negrito</b>\n<i>Mensagem em itálico</i>",
+  "text": "<b><i>✅ TESTE ✅</i></b>",
   "parse_mode": "HTML"
 }

@@ -1,0 +1,23 @@
+2024-07-19T02:09:35.466Z - Servidor rodando na porta 3000
+2024-07-19T02:09:36.301Z - Webhook configurado:
+2024-07-19T02:14:54.547Z - Servidor rodando na porta 3000
+2024-07-19T02:14:56.712Z - Webhook configurado:
+2024-07-19T02:18:53.611Z - ERROR: Exceção não capturada:
+[2024-07-19T02:30:20.921Z] Servidor rodando na porta 3000
+[2024-07-19T02:30:21.743Z] Webhook configurado:
+[2024-07-19T02:30:21.743Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T02:36:52.267Z] Servidor rodando na porta 3000
+[2024-07-19T02:36:53.088Z] Webhook configurado:
+[2024-07-19T02:36:53.088Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T02:40:18.734Z] Servidor rodando na porta 3000
+[2024-07-19T02:40:19.524Z] Webhook configurado:
+[2024-07-19T02:40:19.524Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T02:44:40.501Z] Servidor rodando na porta 3000
+[2024-07-19T02:44:41.299Z] Webhook configurado:
+[2024-07-19T02:44:41.299Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T03:04:19.424Z] Servidor rodando na porta 3000
+[2024-07-19T03:04:20.235Z] Webhook configurado:
+[2024-07-19T03:04:20.235Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T03:09:45.179Z] Servidor rodando na porta 3000
+[2024-07-19T03:09:45.972Z] Webhook configurado:
+[2024-07-19T03:09:45.972Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
