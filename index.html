@@ -3,67 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bot Telegram</title>
+    <title>Bem-vindo ao Site</title>
+    <link rel="stylesheet" href="styles.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            background-image: url('https://i.imgur.com/MKHuy9M.png');
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             margin: 0;
-            padding: 20px;
         }
-        #messages {
-            border: 1px solid #ccc;
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .container input {
+            display: block;
+            margin: 10px auto;
             padding: 10px;
-            height: 300px;
-            overflow-y: scroll;
-            margin-bottom: 20px;
+            width: 80%;
+            max-width: 300px;
+        }
+        .button {
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            width: 150px; /* Tamanho fixo para uniformidade */
+        }
+        .button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        #error-message {
+            color: red;
+            display: none; /* Inicialmente escondido */
+            margin-top: 5px;
         }
     </style>
 </head>
 <body>
-    <h1>Bem-vindo ao Chat Telegram</h1>
-    <div id="messages"></div>
+    <div class="container">
+        <h1>Faça Login ou Cadastre-se</h1>
+        <input type="email" id="userEmail" placeholder="Seu Email" required>
+        <input type="password" id="userPassword" placeholder="Sua Senha" required>
+        <div id="error-message">A senha deve ter pelo menos 6 caracteres.</div>
+        <div>
+            <button id="loginButton" class="button">Acessar</button>
+            <a href="#" id="registerLink" class="button">Cadastre-se</a>
+        </div>
+        <button id="paymentButton" onclick="window.location.href='https://checkout.yampi.com/checkout-link-seu-produto'" class="button">Realizar Pagamento</button>
+    </div>
+
     <script>
-        let ws;
-        let pingInterval;
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginButton = document.getElementById('loginButton');
+            const errorMessage = document.getElementById('error-message');
 
-        function conectarWebSocket() {
-            try {
-                ws = new WebSocket('wss://telegramheroku-87abbc9dd2f9.herokuapp.com');
-
-                ws.onopen = function() {
-                    console.log('Conectado ao servidor WebSocket');
-                    // Enviar um ping a cada 30 segundos para manter a conexão ativa
-                    pingInterval = setInterval(() => {
-                        if (ws.readyState === WebSocket.OPEN) {
-                            ws.send('ping');
-                        }
-                    }, 30000);
-                };
-
-                ws.onmessage = function(event) {
-                    const messagesDiv = document.getElementById('messages');
-                    const novaMensagem = document.createElement('p');
-                    novaMensagem.textContent = event.data;
-                    messagesDiv.appendChild(novaMensagem);
-                    messagesDiv.scrollTop = messagesDiv.scrollHeight; // Rolagem automática para a última mensagem
-                };
-
-                ws.onclose = function() {
-                    console.log('Conexão WebSocket encerrada. Tentando reconectar...');
-                    clearInterval(pingInterval); // Limpa o intervalo de ping
-                    setTimeout(conectarWebSocket, 2000); // Tenta reconectar após 2 segundos
-                };
-
-                ws.onerror = function(error) {
-                    console.error('Erro no WebSocket:', error);
-                    ws.close(); // Fecha a conexão em caso de erro
-                };
-            } catch (error) {
-                console.error('Erro ao conectar ao WebSocket:', error);
+            if (!loginButton || !errorMessage) {
+                console.error('Um ou mais elementos não foram encontrados no DOM.');
+                return;
             }
-        }
 
-        conectarWebSocket();
+            loginButton.addEventListener('click', () => {
+                const password = document.getElementById('userPassword').value.trim();
+                
+                if (password.length < 6) {
+                    errorMessage.style.display = 'block';
+                    return;
+                } else {
+                    errorMessage.style.display = 'none';
+                }
+
+                // Redireciona para a página após login bem-sucedido
+                window.location.href = 'https://botmillion.github.io/telm/';
+            });
+        });
     </script>
 </body>
 </html>
