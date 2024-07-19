@@ -35,7 +35,7 @@ function log(message, error = null) {
 const server = app.listen(PORT, () => {
     log(`Servidor rodando na porta ${PORT}`);
 
-    // Configurar o webhook do Telegram com o novo token do bot
+    // Configurar o webhook do Telegram com o bot que captura as mensagens
     const urlWebhook = `https://api.telegram.org/bot7471920455:AAF2c6mTVdUWaHGdWbIz4MlRN5WWHN-n9ls/setWebhook?url=https://telegramheroku-87abbc9dd2f9.herokuapp.com/webhook`;
 
     fetch(urlWebhook)
@@ -151,19 +151,16 @@ app.post('/webhook', async (req, res) => {
     try {
         log('Corpo da requisição recebido:', JSON.stringify(req.body));
 
-        const message = req.body.message || req.body.channel_post;
+        // Captura todas as possíveis mensagens
+        const message = req.body.message || req.body.channel_post || req.body.edited_message || req.body.edited_channel_post;
 
-        if (message && message.text) {
-            // Verificar se a mensagem foi enviada pelo bot
-            if (message.from && message.from.is_bot) {
-                log('Mensagem enviada pelo bot. Ignorando.');
-                return res.sendStatus(200);
-            }
+        if (message) {
+            const text = message.text || 'Mensagem sem texto';
+            log(`Mensagem recebida: ${text}`);
 
+            // Verificar se a mensagem já foi processada
             if (!mensagens.includes(message.message_id)) {
                 mensagens.push(message.message_id);
-                const text = message.text;
-                log(`Mensagem recebida: ${text}`);
 
                 // Enviar mensagem para os clientes conectados via WebSocket
                 if (wss.clients.size > 0) {
