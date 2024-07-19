@@ -31,6 +31,50 @@ function log(message, error = null) {
     }
 }
 
+// Função para enviar mensagens para o canal do Telegram
+async function enviarMensagemParaCanal(mensagem) {
+    const token = '7377232961:AAFAjIK6cV0ZHEwmRDgqdW_TtLeADyGAJDs';
+    const chatId = '-1002121843991'; // ID do canal
+    const url = `https://api.telegram.org/bot${token}/sendMessage`;
+
+    log(`Enviando mensagem para o canal ${chatId}: ${mensagem}`);
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: chatId,
+                text: mensagem
+            })
+        });
+
+        const data = await response.json();
+        log('Resposta da API do Telegram ao enviar mensagem:', JSON.stringify(data));
+
+        if (!response.ok) {
+            log(`Erro ao enviar mensagem para o canal: ${data.description}`);
+        }
+
+        // Enviar a mensagem enviada também para todos os clientes WebSocket
+        if (wss.clients.size > 0) {
+            wss.clients.forEach((client) => {
+                if (client.readyState === client.OPEN) {
+                    client.send(mensagem);
+                    log(`Mensagem enviada ao cliente WebSocket: ${mensagem}`);
+                } else {
+                    log('Cliente WebSocket não está aberto. Estado:', client.readyState);
+                }
+            });
+        } else {
+            log('Nenhum cliente WebSocket conectado.');
+        }
+
+    } catch (error) {
+        log('Erro ao enviar mensagem para o canal do Telegram:', error);
+    }
+}
+
 // Configurar o servidor HTTP
 const server = app.listen(PORT, () => {
     log(`Servidor rodando na porta ${PORT}`);
@@ -86,20 +130,10 @@ app.get('/', (req, res) => {
                     };
 
                     ws.onmessage = function(event) {
-                        let message;
-
-                        // Verifica o tipo de dado recebido
-                        if (event.data instanceof Blob) {
-                            const reader = new FileReader();
-                            reader.onload = function() {
-                                message = reader.result;
-                                exibirMensagem(message);
-                            };
-                            reader.readAsText(event.data);
-                        } else {
-                            message = event.data;
-                            exibirMensagem(message);
-                        }
+                        const messagesDiv = document.getElementById('messages');
+                        console.log('Mensagem recebida do WebSocket:', event.data);
+                        messagesDiv.innerHTML += \`<p>\${event.data}</p>\`;
+                        messagesDiv.scrollTop = messagesDiv.scrollHeight;
                     };
 
                     ws.onclose = function() {
@@ -110,12 +144,6 @@ app.get('/', (req, res) => {
                     ws.onerror = function(error) {
                         console.error('Erro no WebSocket:', error);
                     };
-                }
-
-                function exibirMensagem(message) {
-                    const messagesDiv = document.getElementById('messages');
-                    messagesDiv.innerHTML += \`<p>\${message}</p>\`;
-                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
                 }
 
                 conectarWebSocket();
@@ -129,9 +157,8 @@ app.get('/', (req, res) => {
 const wss = new WebSocketServer({ server });
 
 wss.on('connection', (ws) => {
-    log('Cliente conectado');
+    log('Cliente WebSocket conectado');
 
-    // Função para manter a conexão ativa
     const manterConexaoAtiva = () => {
         if (ws.readyState === ws.OPEN) {
             ws.ping(); // Envia um ping para manter a conexão ativa
@@ -142,21 +169,20 @@ wss.on('connection', (ws) => {
     manterConexaoAtiva();
 
     ws.on('message', (data) => {
-        // Verifica o tipo de dado e converte para string, se necessário
-        const text = typeof data === 'string' ? data : data.toString();
-        log('Mensagem recebida do Telegram:', text);
-        
-        // Enviar mensagem para o WebSocket
+        log('Mensagem recebida do WebSocket:', data);
+        // Enviar mensagem para todos os clientes conectados
         wss.clients.forEach(client => {
             if (client.readyState === client.OPEN) {
-                client.send(text); // Envia como texto
-                log(`Mensagem enviada ao cliente: ${text}`);
+                client.send(data);
+                log(`Mensagem enviada ao cliente: ${data}`);
+            } else {
+                log('Cliente WebSocket não está aberto. Estado:', client.readyState);
             }
         });
     });
 
     ws.on('close', () => {
-        log('Cliente desconectado');
+        log('Cliente WebSocket desconectado');
     });
 
     ws.on('error', (error) => {
@@ -169,29 +195,40 @@ app.post('/webhook', async (req, res) => {
     try {
         log('Corpo da requisição recebido:', JSON.stringify(req.body));
 
-        // Verificar se a requisição contém uma mensagem ou um post de canal
-        const message = req.body.message || req.body.channel_post;
+        // Processar mensagens de chat e postagens de canal
+        const message = req.body.message || req.body.channel_post || req.body.edited_message || req.body.edited_channel_post;
 
-        if (message && message.text) {
-            const text = message.text;
+        // Verificar se a mensagem é do tipo esperado
+        if (message) {
+            const text = message.text || 'Mensagem sem texto';
             mensagens.push(text);
             log(`Mensagem recebida: ${text}`);
 
-            wss.clients.forEach((client) => {
-                if (client.readyState === client.OPEN) {
-                    client.send(text);
-                    log(`Mensagem enviada ao cliente: ${text}`);
-                }
-            });
+            // Enviar mensagem para o canal do Telegram
+            await enviarMensagemParaCanal(text);
 
-            return res.sendStatus(200); // Retorna 200 OK após processar a mensagem
+            // Enviar mensagem para os clientes conectados via WebSocket
+            if (wss.clients.size > 0) {
+                wss.clients.forEach((client) => {
+                    if (client.readyState === client.OPEN) {
+                        client.send(text);
+                        log(`Mensagem enviada ao cliente WebSocket: ${text}`);
+                    } else {
+                        log('Cliente WebSocket não está aberto. Estado:', client.readyState);
+                    }
+                });
+            } else {
+                log('Nenhum cliente WebSocket conectado.');
+            }
+
+            return res.sendStatus(200);
         } else {
             log('Mensagem não encontrada no corpo da requisição');
-            return res.sendStatus(400); // Retorna 400 Bad Request se a mensagem não estiver presente
+            return res.sendStatus(400);
         }
     } catch (error) {
         log('Erro ao processar o webhook:', error);
-        return res.sendStatus(500); // Retorna 500 Internal Server Error em caso de exceção
+        return res.sendStatus(500);
     }
 });
 
