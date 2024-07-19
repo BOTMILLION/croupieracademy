@@ -31,56 +31,12 @@ function log(message, error = null) {
     }
 }
 
-// Função para enviar mensagens para o canal do Telegram
-async function enviarMensagemParaCanal(mensagem) {
-    const token = '7377232961:AAFAjIK6cV0ZHEwmRDgqdW_TtLeADyGAJDs';
-    const chatId = '-1002121843991'; // ID do canal
-    const url = `https://api.telegram.org/bot${token}/sendMessage`;
-
-    log(`Enviando mensagem para o canal ${chatId}: ${mensagem}`);
-
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: chatId,
-                text: mensagem
-            })
-        });
-
-        const data = await response.json();
-        log('Resposta da API do Telegram ao enviar mensagem:', JSON.stringify(data));
-
-        if (!response.ok) {
-            log(`Erro ao enviar mensagem para o canal: ${data.description}`);
-        }
-
-        // Enviar a mensagem enviada também para todos os clientes WebSocket
-        if (wss.clients.size > 0) {
-            wss.clients.forEach((client) => {
-                if (client.readyState === client.OPEN) {
-                    client.send(mensagem);
-                    log(`Mensagem enviada ao cliente WebSocket: ${mensagem}`);
-                } else {
-                    log('Cliente WebSocket não está aberto. Estado:', client.readyState);
-                }
-            });
-        } else {
-            log('Nenhum cliente WebSocket conectado.');
-        }
-
-    } catch (error) {
-        log('Erro ao enviar mensagem para o canal do Telegram:', error);
-    }
-}
-
 // Configurar o servidor HTTP
 const server = app.listen(PORT, () => {
     log(`Servidor rodando na porta ${PORT}`);
 
-    // Configurar o webhook do Telegram
-    const urlWebhook = `https://api.telegram.org/bot7377232961:AAFAjIK6cV0ZHEwmRDgqdW_TtLeADyGAJDs/setWebhook?url=https://telegramheroku-87abbc9dd2f9.herokuapp.com/webhook`;
+    // Configurar o webhook do Telegram com o novo token do bot
+    const urlWebhook = `https://api.telegram.org/bot7471920455:AAF2c6mTVdUWaHGdWbIz4MlRN5WWHN-n9ls/setWebhook?url=https://telegramheroku-87abbc9dd2f9.herokuapp.com/webhook`;
 
     fetch(urlWebhook)
         .then(response => response.json())
@@ -195,33 +151,39 @@ app.post('/webhook', async (req, res) => {
     try {
         log('Corpo da requisição recebido:', JSON.stringify(req.body));
 
-        // Processar mensagens de chat e postagens de canal
-        const message = req.body.message || req.body.channel_post || req.body.edited_message || req.body.edited_channel_post;
+        const message = req.body.message || req.body.channel_post;
 
-        // Verificar se a mensagem é do tipo esperado
-        if (message) {
-            const text = message.text || 'Mensagem sem texto';
-            mensagens.push(text);
-            log(`Mensagem recebida: ${text}`);
-
-            // Enviar mensagem para o canal do Telegram
-            await enviarMensagemParaCanal(text);
-
-            // Enviar mensagem para os clientes conectados via WebSocket
-            if (wss.clients.size > 0) {
-                wss.clients.forEach((client) => {
-                    if (client.readyState === client.OPEN) {
-                        client.send(text);
-                        log(`Mensagem enviada ao cliente WebSocket: ${text}`);
-                    } else {
-                        log('Cliente WebSocket não está aberto. Estado:', client.readyState);
-                    }
-                });
-            } else {
-                log('Nenhum cliente WebSocket conectado.');
+        if (message && message.text) {
+            // Verificar se a mensagem foi enviada pelo bot
+            if (message.from && message.from.is_bot) {
+                log('Mensagem enviada pelo bot. Ignorando.');
+                return res.sendStatus(200);
             }
 
-            return res.sendStatus(200);
+            if (!mensagens.includes(message.message_id)) {
+                mensagens.push(message.message_id);
+                const text = message.text;
+                log(`Mensagem recebida: ${text}`);
+
+                // Enviar mensagem para os clientes conectados via WebSocket
+                if (wss.clients.size > 0) {
+                    wss.clients.forEach((client) => {
+                        if (client.readyState === client.OPEN) {
+                            client.send(text);
+                            log(`Mensagem enviada ao cliente WebSocket: ${text}`);
+                        } else {
+                            log('Cliente WebSocket não está aberto. Estado:', client.readyState);
+                        }
+                    });
+                } else {
+                    log('Nenhum cliente WebSocket conectado.');
+                }
+
+                return res.sendStatus(200);
+            } else {
+                log('Mensagem já processada no corpo da requisição');
+                return res.sendStatus(200);
+            }
         } else {
             log('Mensagem não encontrada no corpo da requisição');
             return res.sendStatus(400);

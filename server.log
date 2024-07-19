@@ -10,3 +10,41 @@
 [2024-07-19T05:05:23.861Z] Servidor rodando na porta 3000
 [2024-07-19T05:05:24.694Z] Webhook configurado:
 [2024-07-19T05:05:24.694Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T05:17:06.669Z] Servidor rodando na porta 3000
+[2024-07-19T05:17:07.445Z] Webhook configurado:
+[2024-07-19T05:17:07.445Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T05:22:42.344Z] Servidor rodando na porta 3000
+[2024-07-19T05:22:43.139Z] Webhook configurado:
+[2024-07-19T05:22:43.139Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T05:26:26.048Z] Servidor rodando na porta 3000
+[2024-07-19T05:26:26.838Z] Webhook configurado:
+[2024-07-19T05:26:26.838Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T05:28:14.492Z] Servidor rodando na porta 3000
+[2024-07-19T05:28:15.309Z] Webhook configurado:
+[2024-07-19T05:28:15.309Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T05:29:45.471Z] Exceção não capturada:
+[2024-07-19T05:29:45.471Z] ERROR: Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1898:16)
+    at listenInCluster (node:net:1946:12)
+    at Server.listen (node:net:2044:7)
+    at Function.listen (C:\Users\Italo\Documents\ROBOS\site\bottelegram\meu-bot-telegram\node_modules\express\lib\application.js:635:24)
+    at file:///C:/Users/Italo/Documents/ROBOS/site/bottelegram/meu-bot-telegram/index.mjs:35:20
+    at ModuleJob.run (node:internal/modules/esm/module_job:222:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:316:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:123:5)
+[2024-07-19T05:29:53.063Z] Exceção não capturada:
+[2024-07-19T05:29:53.063Z] ERROR: Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1898:16)
+    at listenInCluster (node:net:1946:12)
+    at Server.listen (node:net:2044:7)
+    at Function.listen (C:\Users\Italo\Documents\ROBOS\site\bottelegram\meu-bot-telegram\node_modules\express\lib\application.js:635:24)
+    at file:///C:/Users/Italo/Documents/ROBOS/site/bottelegram/meu-bot-telegram/index.mjs:35:20
+    at ModuleJob.run (node:internal/modules/esm/module_job:222:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:316:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:123:5)
+[2024-07-19T05:30:01.598Z] Servidor rodando na porta 3000
+[2024-07-19T05:30:02.419Z] Webhook configurado:
+[2024-07-19T05:30:02.419Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
+[2024-07-19T05:32:09.502Z] Servidor rodando na porta 3000
+[2024-07-19T05:32:10.322Z] Webhook configurado:
+[2024-07-19T05:32:10.322Z] ERROR: {"ok":true,"result":true,"description":"Webhook is already set"}
