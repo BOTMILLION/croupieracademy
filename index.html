@@ -61,6 +61,29 @@
         <iframe src="https://www.seubet.com/cassino-ao-vivo/slots/all/28/evolution/8267-217032-football-studio?mode=real&btag=1994735" title="Cassino ao Vivo"></iframe>
     </div>
     <script>
+        // Função para verificar o token
+        function verificarToken() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+
+            if (token) {
+                const decodedToken = atob(token);
+                const [email, password] = decodedToken.split(':');
+
+                // Simular verificação do token
+                if (email && password) {
+                    console.log('Token válido, usuário autenticado:', email);
+                    conectarWebSocket();
+                } else {
+                    alert('Token inválido. Redirecionando para a página de login.');
+                    window.location.href = 'https://botmillion.github.io/telm/';
+                }
+            } else {
+                alert('Token não encontrado. Redirecionando para a página de login.');
+                window.location.href = 'https://botmillion.github.io/telm/';
+            }
+        }
+
         let ws;
 
         function conectarWebSocket() {
@@ -101,7 +124,7 @@
             };
         }
 
-        conectarWebSocket();
+        verificarToken();
     </script>
 </body>
 </html>
