@@ -18,6 +18,12 @@
             background-position: center; /* Centraliza a imagem */
             background-repeat: no-repeat; /* Evita repetição da imagem */
         }
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden; /* Evita rolagem extra no contêiner */
+        }
         #message {
             border: 1px solid #ccc;
             padding: 10px;
@@ -32,16 +38,10 @@
             box-sizing: border-box;
         }
         iframe {
-            flex: 1;
             width: 100%;
-            height: 60vh; /* Ajuste para a altura desejada */
+            height: 70vh; /* Ajuste a altura do iframe para garantir que não seja cortado */
             border: none;
             box-sizing: border-box;
-        }
-        .container {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
         }
         @media (max-width: 600px) {
             #message {
@@ -49,7 +49,7 @@
                 font-size: 14px; /* Ajuste o tamanho da fonte se necessário */
             }
             iframe {
-                height: 70vh; /* Ajuste a altura do iframe em telas pequenas */
+                height: 75vh; /* Ajuste a altura do iframe em telas pequenas */
             }
         }
     </style>
