@@ -61,10 +61,16 @@
         <iframe src="https://www.seubet.com/cassino-ao-vivo/slots/all/28/evolution/8267-217032-football-studio?mode=real&btag=1994735" title="Cassino ao Vivo"></iframe>
     </div>
     <script>
-        let ws;
+        function adicionarParametroUnico() {
+            const urlAtual = window.location.href.split('?')[0]; // Remove qualquer parâmetro de consulta existente
+            const timestamp = new Date().getTime(); // Gera um timestamp único
+            const novoUrl = `${urlAtual}?v=${timestamp}`; // Adiciona o timestamp como parâmetro
+
+            window.history.replaceState(null, '', novoUrl); // Atualiza a URL no navegador
+        }
 
         function conectarWebSocket() {
-            ws = new WebSocket('wss://telegramheroku-87abbc9dd2f9.herokuapp.com/');
+            let ws = new WebSocket('wss://telegramheroku-87abbc9dd2f9.herokuapp.com/');
 
             ws.onopen = function() {
                 console.log('Conectado ao servidor WebSocket');
@@ -101,7 +107,8 @@
             };
         }
 
-        conectarWebSocket();
+        adicionarParametroUnico(); // Adiciona o parâmetro único à URL
+        conectarWebSocket(); // Conecta ao WebSocket
     </script>
 </body>
 </html>
