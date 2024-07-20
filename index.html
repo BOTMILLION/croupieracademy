@@ -14,43 +14,43 @@
             height: 100vh;
             overflow: hidden;
             background-image: url('https://i.ibb.co/Mk5kV1N/Texto-do-seu-par-grafo-2.png');
-            background-size: cover; /* Ajusta a imagem para cobrir toda a área */
-            background-position: center; /* Centraliza a imagem */
-            background-repeat: no-repeat; /* Evita repetição da imagem */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
         .container {
             display: flex;
             flex-direction: column;
             height: 100%;
-            overflow: hidden; /* Evita rolagem extra no contêiner */
+            overflow: hidden;
         }
         #message {
             border: 1px solid #ccc;
             padding: 10px;
-            height: 15vh; /* Ajuste para a altura desejada */
+            height: 15vh;
             overflow-y: auto;
-            background-color: rgba(255, 255, 255, 0.8); /* Fundo semitransparente para contraste */
+            background-color: rgba(255, 255, 255, 0.8);
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            margin: 0; /* Remove margem para melhor ajuste */
+            margin: 0;
             box-sizing: border-box;
-            z-index: 1; /* Garante que a área de mensagens fique acima do iframe */
+            z-index: 1;
         }
         iframe {
             width: 100%;
-            height: 85vh; /* Ajuste a altura do iframe para garantir que não seja cortado */
+            height: 85vh;
             border: none;
             box-sizing: border-box;
         }
         @media (max-width: 600px) {
             #message {
-                height: 20vh; /* Ajuste para a altura desejada em telas pequenas */
-                font-size: 14px; /* Ajuste o tamanho da fonte se necessário */
+                height: 20vh;
+                font-size: 14px;
             }
             iframe {
-                height: 75vh; /* Ajuste a altura do iframe em telas pequenas */
+                height: 75vh;
             }
         }
     </style>
@@ -61,16 +61,20 @@
         <iframe src="https://www.seubet.com/cassino-ao-vivo/slots/all/28/evolution/8267-217032-football-studio?mode=real&btag=1994735" title="Cassino ao Vivo"></iframe>
     </div>
     <script>
-        function adicionarParametroUnico() {
-            const urlAtual = window.location.href.split('?')[0]; // Remove qualquer parâmetro de consulta existente
-            const timestamp = new Date().getTime(); // Gera um timestamp único
-            const novoUrl = `${urlAtual}?v=${timestamp}`; // Adiciona o timestamp como parâmetro
+        function verificarAcesso() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const acesso = urlParams.get('acesso');
 
-            window.history.replaceState(null, '', novoUrl); // Atualiza a URL no navegador
+            if (!acesso) {
+                alert('Acesso inválido. Redirecionando...');
+                window.location.href = 'https://botmillion.github.io/telm/erro';
+            }
         }
 
+        let ws;
+
         function conectarWebSocket() {
-            let ws = new WebSocket('wss://telegramheroku-87abbc9dd2f9.herokuapp.com/');
+            ws = new WebSocket('wss://telegramheroku-87abbc9dd2f9.herokuapp.com/');
 
             ws.onopen = function() {
                 console.log('Conectado ao servidor WebSocket');
@@ -83,16 +87,16 @@
                     const reader = new FileReader();
                     reader.onload = function() {
                         const message = reader.result;
-                        if (message !== 'ping') { // Ignora mensagens de ping
-                            messageP.textContent = message; // Substitui a mensagem atual
-                            messageP.scrollTop = messageP.scrollHeight; // Garante que a rolagem vai para o fim
+                        if (message !== 'ping') {
+                            messageP.textContent = message;
+                            messageP.scrollTop = messageP.scrollHeight;
                         }
                     };
                     reader.readAsText(event.data);
                 } else {
-                    if (event.data !== 'ping') { // Ignora mensagens de ping
-                        messageP.textContent = event.data; // Substitui a mensagem atual
-                        messageP.scrollTop = messageP.scrollHeight; // Garante que a rolagem vai para o fim
+                    if (event.data !== 'ping') {
+                        messageP.textContent = event.data;
+                        messageP.scrollTop = messageP.scrollHeight;
                     }
                 }
             };
@@ -107,8 +111,8 @@
             };
         }
 
-        adicionarParametroUnico(); // Adiciona o parâmetro único à URL
-        conectarWebSocket(); // Conecta ao WebSocket
+        verificarAcesso();
+        conectarWebSocket();
     </script>
 </body>
 </html>
