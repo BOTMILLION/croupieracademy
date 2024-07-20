@@ -1,0 +1,43 @@
+<!-- public/confirmation.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmação de E-mail</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .message {
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .message h1 {
+            color: #4caf50;
+        }
+        .message p {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="message">
+        <h1>Email verificado com sucesso!</h1>
+        <p>Aguarde. Você será redirecionado para o site novamente.</p>
+        <script>
+            setTimeout(function() {
+                window.location.href = "https://botmillion.github.io/telm/"; // Substitua com o URL do seu projeto
+            }, 3000); // Redireciona após 3 segundos
+        </script>
+    </div>
+</body>
+</html>
