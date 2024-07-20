@@ -20,8 +20,8 @@ app.use(bodyParser.json());
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'app.apostadorprime@gmail.com',
-        pass: 'tbub bzbo esow quuk' // Substitua pela senha de aplicativo correta
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS
     }
 });
 
@@ -49,7 +49,7 @@ app.post('/register', async (req, res) => {
         });
 
         const mailOptions = {
-            from: 'app.apostadorprime@gmail.com',
+            from: process.env.GMAIL_USER,
             to: email,
             subject: 'Verifique seu endereço de email',
             text: `Olá!\n\nPara completar seu cadastro, por favor, clique no link abaixo para verificar seu e-mail:\n\nhttp://afternoon-shelf-67854-a24479d38529.herokuapp.com/verify?token=${verificationToken}\n\nObrigado por se registrar\n\nAtenciosamente,\n\nEquipe Apostador Prime`
