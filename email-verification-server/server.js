@@ -17,16 +17,14 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Configuração do Nodemailer
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: 'app.apostadorprime@gmail.com',
-        pass: 'tbub bzbo esow quuk' // Senha do aplicativo
+        pass: 'tbub bzbo esow quuk' // Substitua pela senha de aplicativo correta
     }
 });
 
-// Endpoint para registro de usuário
 app.post('/register', async (req, res) => {
     const { email, password } = req.body;
 
@@ -42,7 +40,7 @@ app.post('/register', async (req, res) => {
             password: password,
         });
         const userId = newUserRecord.uid;
-
+        
         const verificationToken = uuidv4();
         await db.collection('users').doc(userId).set({
             email: email,
@@ -53,19 +51,8 @@ app.post('/register', async (req, res) => {
         const mailOptions = {
             from: 'app.apostadorprime@gmail.com',
             to: email,
-            subject: 'Verificação de E-mail',
-            html: `
-                <html>
-                <body>
-                    <p>Olá!</p>
-                    <p>Para completar seu cadastro, por favor, clique no link abaixo para verificar seu e-mail:</p>
-                    <p><a href="http://localhost:3000/verify?token=${verificationToken}" style="color: #1a73e8;">Link de Verificação</a></p>
-                    <p>Obrigado por se registrar</p>
-                    <p>Atenciosamente,</p>
-                    <p>Equipe Apostador Prime</p>
-                </body>
-                </html>
-            `
+            subject: 'Verifique seu endereço de email',
+            text: `Olá!\n\nPara completar seu cadastro, por favor, clique no link abaixo para verificar seu e-mail:\n\nhttp://afternoon-shelf-67854-a24479d38529.herokuapp.com/verify?token=${verificationToken}\n\nObrigado por se registrar\n\nAtenciosamente,\n\nEquipe Apostador Prime`
         };
 
         transporter.sendMail(mailOptions, (error, info) => {
@@ -80,7 +67,6 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// Endpoint para verificar o e-mail
 app.get('/verify', async (req, res) => {
     const { token } = req.query;
     try {
@@ -90,16 +76,11 @@ app.get('/verify', async (req, res) => {
         }
         const userId = snapshot.docs[0].id;
         await db.collection('users').doc(userId).update({ verified: true });
-
-        // Redireciona para a página de confirmação
-        res.redirect('/confirmation.html');
+        res.status(200).sendFile(__dirname + '/confirmation.html');
     } catch (error) {
         res.status(400).send('Erro ao verificar email.');
     }
 });
-
-// Servir arquivos estáticos da pasta 'public'
-app.use(express.static('public'));
 
 app.listen(3000, () => {
     console.log('Servidor rodando na porta 3000');
