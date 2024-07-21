@@ -161,7 +161,6 @@ wss.on('connection', (ws) => {
     ws.on('close', () => {
         log('Cliente WebSocket desconectado');
     });
-    
 
     ws.on('error', (error) => {
         log('Erro no WebSocket:', error);
