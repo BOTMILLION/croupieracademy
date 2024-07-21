@@ -32,9 +32,12 @@ function log(message, error = null) {
 }
 
 // Middleware para verificar a origem da requisição
+// Middleware para verificar a origem da requisição
 app.use((req, res, next) => {
     const referer = req.get('Referer');
     const urlOriginal = 'https://botmillion.github.io/telm/';
+
+    log(`Referer recebido: ${referer}`);
 
     if (referer !== urlOriginal) {
         log(`Acesso inválido de: ${referer}`);
@@ -42,6 +45,7 @@ app.use((req, res, next) => {
     }
     next();
 });
+
 
 // Configurar o servidor HTTP
 const server = app.listen(PORT, () => {
