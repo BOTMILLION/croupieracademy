@@ -31,22 +31,6 @@ function log(message, error = null) {
     }
 }
 
-// Middleware para verificar a origem da requisição
-// Middleware para verificar a origem da requisição
-app.use((req, res, next) => {
-    const referer = req.get('Referer');
-    const urlOriginal = 'https://botmillion.github.io/telm/';
-
-    log(`Referer recebido: ${referer}`);
-
-    if (referer !== urlOriginal) {
-        log(`Acesso inválido de: ${referer}`);
-        return res.status(403).send('Acesso negado');
-    }
-    next();
-});
-
-
 // Configurar o servidor HTTP
 const server = app.listen(PORT, () => {
     log(`Servidor rodando na porta ${PORT}`);
@@ -169,7 +153,7 @@ wss.on('connection', (ws) => {
                 client.send(data);
                 log(`Mensagem enviada ao cliente: ${data}`);
             } else {
-                log('Cliente WebSocket não está aberto. Estado:', client.readyState);
+                log('Cliente WebSocket não está aberto. Ignorando envio.');
             }
         });
     });
@@ -183,56 +167,26 @@ wss.on('connection', (ws) => {
     });
 });
 
-// Endpoint para o webhook
-app.post('/webhook', async (req, res) => {
-    try {
-        log('Corpo da requisição recebido:', JSON.stringify(req.body));
-
-        // Captura todas as possíveis mensagens
-        const message = req.body.message || req.body.channel_post || req.body.edited_message || req.body.edited_channel_post;
-
-        if (message) {
-            const text = message.text || 'Mensagem sem texto';
-            log(`Mensagem recebida: ${text}`);
-
-            // Verificar se a mensagem já foi processada
-            if (!mensagens.includes(message.message_id)) {
-                mensagens.push(message.message_id);
-
-                // Enviar mensagem para os clientes conectados via WebSocket
-                if (wss.clients.size > 0) {
-                    wss.clients.forEach((client) => {
-                        if (client.readyState === client.OPEN) {
-                            client.send(text);
-                            log(`Mensagem enviada ao cliente WebSocket: ${text}`);
-                        } else {
-                            log('Cliente WebSocket não está aberto. Estado:', client.readyState);
-                        }
-                    });
-                } else {
-                    log('Nenhum cliente WebSocket conectado.');
-                }
-
-                return res.sendStatus(200);
-            } else {
-                log('Mensagem já processada no corpo da requisição');
-                return res.sendStatus(200);
+// Webhook para receber mensagens do Telegram
+app.post('/webhook', (req, res) => {
+    const message = req.body.message;
+    if (message) {
+        const chatId = message.chat.id;
+        const text = message.text;
+        log(`Mensagem recebida do Telegram: ${text}`);
+        mensagens.push(text);
+        wss.clients.forEach(client => {
+            if (client.readyState === client.OPEN) {
+                client.send(text);
+                log(`Mensagem enviada ao cliente WebSocket: ${text}`);
             }
-        } else {
-            log('Mensagem não encontrada no corpo da requisição');
-            return res.sendStatus(400);
-        }
-    } catch (error) {
-        log('Erro ao processar o webhook:', error);
-        return res.sendStatus(500);
+        });
+        res.send('OK');
+    } else {
+        res.status(400).send('Mensagem inválida');
     }
 });
 
-// Tratamento global de erros
-process.on('uncaughtException', (err) => {
-    log('Exceção não capturada:', err);
-});
-
-process.on('unhandledRejection', (err) => {
-    log('Rejeição de promessa não tratada:', err);
+process.on('exit', () => {
+    logStream.end();
 });
