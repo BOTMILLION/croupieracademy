@@ -8,37 +8,68 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            background-image: url('https://i.ibb.co/Mk5kV1N/Texto-do-seu-par-grafo-2.png');
+            background-size: cover; /* Ajusta a imagem para cobrir toda a área */
+            background-position: center; /* Centraliza a imagem */
+            background-repeat: no-repeat; /* Evita repetição da imagem */
         }
-        #messages {
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden; /* Evita rolagem extra no contêiner */
+        }
+        #message {
             border: 1px solid #ccc;
             padding: 10px;
-            height: 300px;
-            overflow-y: scroll;
-            margin-bottom: 20px;
-            background-color: #f9f9f9;
-        }
-        #iframe-container {
-            margin-top: 20px;
+            height: 15vh; /* Ajuste para a altura desejada */
+            overflow-y: auto;
+            background-color: rgba(255, 255, 255, 0.8); /* Fundo semitransparente para contraste */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin: 0; /* Remove margem para melhor ajuste */
+            box-sizing: border-box;
+            z-index: 1; /* Garante que a área de mensagens fique acima do iframe */
         }
         iframe {
             width: 100%;
-            height: 500px;
+            height: 85vh; /* Ajuste a altura do iframe para garantir que não seja cortado */
             border: none;
+            box-sizing: border-box;
+        }
+        @media (max-width: 600px) {
+            #message {
+                height: 20vh; /* Ajuste para a altura desejada em telas pequenas */
+                font-size: 14px; /* Ajuste o tamanho da fonte se necessário */
+            }
+            iframe {
+                height: 75vh; /* Ajuste a altura do iframe em telas pequenas */
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Bem-vindo ao Chat Telegram</h1>
-    <div id="messages"></div>
-    
-    <!-- IFrame para o jogo -->
-    <div id="iframe-container">
-        <iframe src="https://vaidebet.com/ptb/games/livecasino/detail/normal/18198/evol_TopCard000000001_BRL" title="Jogo ao Vivo"></iframe>
+    <div class="container">
+        <p id="message">Aguardando mensagens...</p>
+        <iframe src="https://www.seubet.com/cassino-ao-vivo/slots/all/28/evolution/8267-217032-football-studio?mode=real&btag=1994735" title="Cassino ao Vivo"></iframe>
     </div>
-
     <script>
         let ws;
+
+        function adicionarParametroUnico() {
+            const urlAtual = window.location.href.split('?')[0]; // Remove qualquer parâmetro de consulta existente
+            const timestamp = new Date().getTime(); // Gera um timestamp único
+            const novoUrl = `${urlAtual}?v=${timestamp}`; // Adiciona o timestamp como parâmetro
+
+            window.history.replaceState(null, '', novoUrl); // Atualiza a URL no navegador
+        }
 
         function conectarWebSocket() {
             ws = new WebSocket('wss://telegramheroku-87abbc9dd2f9.herokuapp.com/');
@@ -48,24 +79,21 @@
             };
 
             ws.onmessage = function(event) {
-                const messagesDiv = document.getElementById('messages');
-
+                const messageP = document.getElementById('message');
                 if (event.data instanceof Blob) {
                     const reader = new FileReader();
                     reader.onload = function() {
                         const message = reader.result;
-                        console.log('Mensagem recebida do WebSocket:', message);
                         if (message !== 'ping') { // Ignora mensagens de ping
-                            messagesDiv.innerHTML += `<p>${message}</p>`;
-                            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                            messageP.textContent = message; // Substitui a mensagem atual
+                            messageP.scrollTop = messageP.scrollHeight; // Garante que a rolagem vai para o fim
                         }
                     };
                     reader.readAsText(event.data);
                 } else {
-                    console.log('Mensagem recebida do WebSocket:', event.data);
                     if (event.data !== 'ping') { // Ignora mensagens de ping
-                        messagesDiv.innerHTML += `<p>${event.data}</p>`;
-                        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                        messageP.textContent = event.data; // Substitui a mensagem atual
+                        messageP.scrollTop = messageP.scrollHeight; // Garante que a rolagem vai para o fim
                     }
                 }
             };
@@ -81,6 +109,7 @@
         }
 
         conectarWebSocket();
+        adicionarParametroUnico(); // Adiciona o parâmetro único à URL
     </script>
 </body>
 </html>
