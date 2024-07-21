@@ -62,10 +62,10 @@
     </div>
     <script>
         function verificarAcesso() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const acesso = urlParams.get('acesso');
+            const urlOriginal = 'https://botmillion.github.io/telm/';
 
-            if (!acesso) {
+            // Verifica se o referer corresponde à URL original
+            if (document.referrer !== urlOriginal) {
                 alert('Acesso inválido. Redirecionando...');
                 window.location.href = 'https://botmillion.github.io/telm/erro';
             }
