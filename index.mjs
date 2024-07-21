@@ -31,6 +31,18 @@ function log(message, error = null) {
     }
 }
 
+// Middleware para verificar a origem da requisição
+app.use((req, res, next) => {
+    const referer = req.get('Referer');
+    const urlOriginal = 'https://botmillion.github.io/telm/';
+
+    if (referer !== urlOriginal) {
+        log(`Acesso inválido de: ${referer}`);
+        return res.status(403).send('Acesso negado');
+    }
+    next();
+});
+
 // Configurar o servidor HTTP
 const server = app.listen(PORT, () => {
     log(`Servidor rodando na porta ${PORT}`);
