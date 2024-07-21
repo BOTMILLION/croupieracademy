@@ -53,9 +53,42 @@
                 height: 75vh;
             }
         }
+        .header {
+            position: fixed;
+            top: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            z-index: 2;
+        }
+        #username {
+            font-weight: bold;
+        }
+        #timer {
+            margin-top: 5px;
+        }
+        #logout {
+            margin-top: 10px;
+            background-color: #ff4d4d;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
+    <div class="header">
+        <div id="username">Usuário: <span id="user-name">Carregando...</span></div>
+        <div id="timer">Tempo restante: <span id="time-left">Calculando...</span></div>
+        <button id="logout">Sair</button>
+    </div>
     <div class="container">
         <p id="message">Aguardando mensagens...</p>
         <iframe src="https://www.seubet.com/cassino-ao-vivo/slots/all/28/evolution/8267-217032-football-studio?mode=real&btag=1994735" title="Cassino ao Vivo"></iframe>
@@ -72,6 +105,32 @@
 
             alert('Acesso inválido. Redirecionando...');
             window.location.href = urlOriginal;
+        }
+
+        function iniciarTemporizador(duracao) {
+            const timerElement = document.getElementById('time-left');
+            let tempoRestante = duracao;
+
+            const atualizarTemporizador = () => {
+                const minutos = Math.floor(tempoRestante / 60);
+                const segundos = tempoRestante % 60;
+                timerElement.textContent = `${minutos}m ${segundos}s`;
+
+                if (tempoRestante <= 0) {
+                    clearInterval(intervalo);
+                    timerElement.textContent = 'Tempo expirado!';
+                } else {
+                    tempoRestante -= 1;
+                }
+            };
+
+            atualizarTemporizador();
+            const intervalo = setInterval(atualizarTemporizador, 1000);
+        }
+
+        function sairDaConta() {
+            alert('Você será desconectado.');
+            window.close(); // Fecha a aba atual
         }
 
         let ws;
@@ -114,8 +173,21 @@
             };
         }
 
+        function obterDadosDoUsuario() {
+            // Aqui você deve obter as informações do usuário, como o nome e o tempo restante do período grátis.
+            // Este é um exemplo fictício.
+            const nomeUsuario = 'Usuário Exemplo'; // Substitua por um nome real do usuário
+            const tempoGratis = 600; // Tempo grátis em segundos (por exemplo, 10 minutos)
+
+            document.getElementById('user-name').textContent = nomeUsuario;
+            iniciarTemporizador(tempoGratis);
+        }
+
         verificarAcesso();
         conectarWebSocket();
+        obterDadosDoUsuario();
+
+        document.getElementById('logout').addEventListener('click', sairDaConta);
     </script>
 </body>
 </html>
