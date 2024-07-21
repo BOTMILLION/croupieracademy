@@ -65,10 +65,13 @@
             const urlOriginal = 'https://botmillion.github.io/telm/';
             const urlAtual = window.location.href.split('?')[0]; // Remove os parâmetros de consulta
 
-            if (urlAtual !== urlOriginal) {
-                alert('Acesso inválido. Redirecionando...');
-                window.location.href = urlOriginal;
+            // Permitir o acesso se a URL atual for igual à URL original ou se contiver o parâmetro 'acesso'
+            if (urlAtual === urlOriginal || new URLSearchParams(window.location.search).has('acesso')) {
+                return;
             }
+
+            alert('Acesso inválido. Redirecionando...');
+            window.location.href = urlOriginal;
         }
 
         let ws;
