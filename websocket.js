@@ -1,48 +1,31 @@
-// Variável global para o WebSocket
-let ws;
+const WebSocket = require('ws');
+const express = require('express');
+const http = require('http');
 
-// Função para conectar ao WebSocket
-function conectarWebSocket() {
-    try {
-        // Inicializa a conexão WebSocket
-        ws = new WebSocket('wss://telegramheroku-87abbc9dd2f9.herokuapp.com');
+// Configura o servidor Express
+const app = express();
+const server = http.createServer(app);
 
-        // Evento quando a conexão WebSocket é aberta com sucesso
-        ws.onopen = () => {
-            console.log('Conectado ao WebSocket');
-        };
+// Configura o WebSocket
+const wss = new WebSocket.Server({ server });
 
-        // Evento quando uma mensagem é recebida do WebSocket
-        ws.onmessage = (event) => {
-            const mensagensDiv = document.getElementById('messages'); // Certifique-se de que o ID está correto
-            if (mensagensDiv) { // Verifica se o elemento existe
-                const novaMensagem = document.createElement('div');
-                novaMensagem.textContent = event.data; // Mensagem recebida do servidor
-                mensagensDiv.appendChild(novaMensagem);
-                mensagensDiv.scrollTop = mensagensDiv.scrollHeight; // Rolagem automática para a última mensagem
-            } else {
-                console.error('Elemento com ID "messages" não encontrado.');
-            }
-        };
+wss.on('connection', function connection(ws) {
+  console.log('Cliente WebSocket conectado');
 
-        // Evento quando a conexão WebSocket é fechada
-        ws.onclose = () => {
-            console.log('Desconectado do WebSocket');
-            // Lógica de reconexão
-            setTimeout(() => {
-                console.log('Tentando reconectar...');
-                conectarWebSocket(); // Chama a função para reconectar
-            }, 2000); // Tenta reconectar após 2 segundos
-        };
+  // Evento quando uma mensagem é recebida do cliente WebSocket
+  ws.on('message', function incoming(message) {
+    console.log('Mensagem recebida do cliente WebSocket:', message);
 
-        // Evento quando ocorre um erro na conexão WebSocket
-        ws.onerror = (error) => {
-            console.error('Erro no WebSocket:', error);
-        };
-    } catch (error) {
-        console.error('Erro ao conectar ao WebSocket:', error);
-    }
-}
+    // Aqui você pode adicionar código para processar a mensagem
+    // e, se necessário, enviar uma resposta para o cliente
+  });
 
-// Chama a função de conexão inicialmente
-conectarWebSocket();
+  // Envia uma mensagem de boas-vindas para o cliente
+  ws.send('Bem-vindo ao WebSocket!');
+});
+
+// Inicia o servidor na porta 3000 (ou a porta que você estiver usando)
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Servidor WebSocket rodando na porta ${PORT}`);
+});
