@@ -8,171 +8,64 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
-            background-image: url('https://i.ibb.co/Mk5kV1N/Texto-do-seu-par-grafo-2.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-        .container {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            overflow: hidden;
             padding: 20px;
-            box-sizing: border-box;
         }
-        #message {
+        #messages {
             border: 1px solid #ccc;
             padding: 10px;
-            height: 15vh;
-            overflow-y: auto;
-            background-color: rgba(255, 255, 255, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            margin: 0;
-            box-sizing: border-box;
-            z-index: 1;
-        }
-        iframe {
-            width: 100%;
-            height: 70vh; /* Ajuste a altura para se ajustar ao layout */
-            border: none;
-            box-sizing: border-box;
-        }
-        #user-info {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            z-index: 2;
-        }
-        #user-info p {
-            margin: 0;
-            padding: 0;
-            font-size: 14px;
-        }
-        #user-info button {
-            margin-top: 10px;
-            padding: 5px 10px;
-            border: none;
-            background-color: #007bff;
-            color: white;
-            font-size: 14px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        #user-info button:hover {
-            background-color: #0056b3;
-        }
-        @media (max-width: 600px) {
-            #message {
-                height: 20vh;
-                font-size: 14px;
-            }
-            iframe {
-                height: 70vh;
-            }
-            #user-info {
-                top: 5px;
-                right: 5px;
-                padding: 5px;
-                font-size: 12px;
-            }
-            #user-info button {
-                padding: 3px 6px;
-                font-size: 12px;
-            }
+            height: 300px;
+            overflow-y: scroll;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <p id="message">Aguardando mensagens...</p>
-        <iframe src="https://www.seubet.com/cassino-ao-vivo/slots/all/28/evolution/8267-217032-football-studio?mode=real&btag=1994735" title="Cassino ao Vivo"></iframe>
-        <div id="user-info">
-            <p id="user-name">Nome do Usuário</p>
-            <p id="time-left">Tempo Restante: </p>
-            <button id="logout-btn">Sair</button>
-        </div>
-    </div>
-
-    <!-- Importar SDKs do Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database.js"></script>
+    <h1>Bem-vindo ao Chat Telegram</h1>
+    <div id="messages"></div>
     <script>
-        // Configuração do Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyCKw5ZcJBcTvf1onPtkzgvJqlRAsbUqauk",
-            authDomain: "robo-7937c.firebaseapp.com",
-            projectId: "robo-7937c",
-            storageBucket: "robo-7937c.appspot.com",
-            messagingSenderId: "444396924434",
-            appId: "1:444396924434:web:46b93323f9c22d90ac32cb",
-        };
+        let ws;
 
-        // Inicializar o Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const database = firebase.database();
+        function conectarWebSocket() {
+            ws = new WebSocket('wss://telegramheroku-87abbc9dd2f9.herokuapp.com/');
 
-        // Função para obter dados do usuário
-        function obterDadosDoUsuario() {
-            const user = firebase.auth().currentUser;
+            ws.onopen = function() {
+                console.log('Conectado ao servidor WebSocket');
+            };
 
-            if (user) {
-                // Exibir nome do usuário
-                document.getElementById('user-name').textContent = `Bem-vindo, ${user.displayName || 'Usuário'}`;
+            ws.onmessage = function(event) {
+                const messagesDiv = document.getElementById('messages');
 
-                // Obter tempo restante do período gratuito
-                const userId = user.uid;
-                const ref = database.ref(`usuarios/${userId}`);
-
-                ref.once('value', (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
-                        document.getElementById('time-left').textContent = `Tempo Restante: ${data.tempoGratis} minutos`;
+                if (event.data instanceof Blob) {
+                    const reader = new FileReader();
+                    reader.onload = function() {
+                        const message = reader.result;
+                        console.log('Mensagem recebida do WebSocket:', message);
+                        if (message !== 'ping') { // Ignora mensagens de ping
+                            messagesDiv.innerHTML += `<p>${message}</p>`;
+                            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                        }
+                    };
+                    reader.readAsText(event.data);
+                } else {
+                    console.log('Mensagem recebida do WebSocket:', event.data);
+                    if (event.data !== 'ping') { // Ignora mensagens de ping
+                        messagesDiv.innerHTML += `<p>${event.data}</p>`;
+                        messagesDiv.scrollTop = messagesDiv.scrollHeight;
                     }
-                });
+                }
+            };
 
-            } else {
-                // Usuário não autenticado
-                window.location.href = 'https://botmillion.github.io/telm/erro';
-            }
+            ws.onclose = function() {
+                console.log('Conexão WebSocket encerrada. Tentando reconectar...');
+                setTimeout(conectarWebSocket, 2000);
+            };
+
+            ws.onerror = function(error) {
+                console.error('Erro no WebSocket:', error);
+            };
         }
 
-        // Função para fazer logout
-        function fazerLogout() {
-            firebase.auth().signOut().then(() => {
-                alert('Você foi desconectado.');
-                window.close(); // Fecha a aba do navegador
-            }).catch((error) => {
-                console.error('Erro ao sair:', error);
-            });
-        }
-
-        // Configurar o botão de logout
-        document.getElementById('logout-btn').addEventListener('click', fazerLogout);
-
-        // Verificar e obter dados do usuário ao carregar a página
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                obterDadosDoUsuario();
-            } else {
-                window.location.href = 'https://botmillion.github.io/telm/erro';
-            }
-        });
+        conectarWebSocket();
     </script>
 </body>
 </html>
