@@ -38,16 +38,14 @@
             position: relative;
             height: 10vh;
             font-size: 16px;
-            overflow-y: auto; /* Adiciona rolagem interna se necessário */
+            overflow-y: auto;
         }
         iframe {
             width: 100%;
             border: none;
             box-sizing: border-box;
-            height: 80vh; /* Define uma altura fixa para o iframe */
-            max-height: 100%; /* Garante que o iframe não exceda a altura da tela */
-            overflow: hidden; /* Oculta a rolagem externa */
-            display: block; /* Garante que o iframe seja exibido como um bloco */
+            overflow: hidden;
+            display: block;
         }
         @media (max-width: 600px) {
             #message {
@@ -55,7 +53,8 @@
                 font-size: 14px;
             }
             iframe {
-                height: calc(100vh - 15vh); /* Ajusta altura do iframe para dispositivos móveis */
+                height: calc(100vh - 15vh); /* Ajusta a altura do iframe para dispositivos móveis */
+                max-height: 75vh; /* Garante que o iframe não exceda a altura da tela */
             }
         }
     </style>
