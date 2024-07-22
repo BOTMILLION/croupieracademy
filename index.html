@@ -26,7 +26,7 @@
         }
         #message {
             border: 1px solid #ccc;
-            padding: 5px; /* Diminuído o padding */
+            padding: 5px;
             background-color: rgba(255, 255, 255, 0.8);
             box-sizing: border-box;
             display: flex;
@@ -36,23 +36,23 @@
             margin: 0;
             z-index: 1;
             position: relative;
-            height: 10vh; /* Ajuste a altura conforme necessário */
-            font-size: 16px; /* Aumentado o tamanho da fonte */
+            height: 10vh;
+            font-size: 16px;
         }
         iframe {
             width: 100%;
-            height: calc(100vh - 10vh); /* Ajusta a altura do iframe para preencher o restante da tela */
             border: none;
             box-sizing: border-box;
-            margin-top: -10px; /* Ajuste o iframe para cima */
+            margin-top: 0; /* Remover o ajuste para cima */
+            display: block; /* Garante que o iframe se comporte como um bloco */
         }
         @media (max-width: 600px) {
             #message {
-                height: 15vh; /* Ajuste a altura para dispositivos móveis */
-                font-size: 14px; /* Ajuste o tamanho da fonte para dispositivos móveis */
+                height: 15vh;
+                font-size: 14px;
             }
             iframe {
-                height: calc(100vh - 15vh); /* Ajusta a altura do iframe para dispositivos móveis */
+                height: calc(100vh - 15vh); /* Ajuste a altura para dispositivos móveis */
             }
         }
     </style>
@@ -101,9 +101,17 @@
             };
         }
 
+        function ajustarAlturaIframe() {
+            const iframe = document.querySelector('iframe');
+            const messageHeight = document.getElementById('message').offsetHeight;
+            iframe.style.height = `calc(100vh - ${messageHeight}px)`;
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             adicionarParametroUnico();
             conectarWebSocket();
+            ajustarAlturaIframe();
+            window.addEventListener('resize', ajustarAlturaIframe); // Ajusta a altura do iframe ao redimensionar a janela
         });
     </script>
 </head>
