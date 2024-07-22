@@ -38,13 +38,15 @@
             position: relative;
             height: 10vh;
             font-size: 16px;
+            overflow-y: auto; /* Adiciona rolagem interna se necessário */
         }
         iframe {
             width: 100%;
             border: none;
             box-sizing: border-box;
-            margin-top: 0; /* Remove o ajuste para cima */
-            height: calc(100vh - 10vh); /* Ajusta a altura para preencher o restante da tela */
+            margin-top: 0; /* Remove ajuste para cima */
+            height: calc(100vh - 10vh); /* Ajusta altura do iframe para preencher o restante da tela */
+            overflow: hidden; /* Remove rolagem externa do iframe */
         }
         @media (max-width: 600px) {
             #message {
@@ -52,12 +54,18 @@
                 font-size: 14px;
             }
             iframe {
-                height: calc(100vh - 15vh); /* Ajusta a altura do iframe para dispositivos móveis */
-                overflow: auto; /* Adiciona rolagem ao iframe, se necessário */
+                height: calc(100vh - 15vh); /* Ajusta altura do iframe para dispositivos móveis */
+                overflow: hidden; /* Remove rolagem externa do iframe */
             }
         }
     </style>
     <script>
+        function ajustarAlturaIframe() {
+            const iframe = document.querySelector('iframe');
+            const messageHeight = document.getElementById('message').offsetHeight;
+            iframe.style.height = `calc(100vh - ${messageHeight}px)`;
+        }
+
         function adicionarParametroUnico() {
             const urlAtual = window.location.href.split('?')[0];
             const timestamp = new Date().getTime();
@@ -105,6 +113,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             adicionarParametroUnico();
             conectarWebSocket();
+            ajustarAlturaIframe(); // Ajusta a altura do iframe após o carregamento
+            window.addEventListener('resize', ajustarAlturaIframe); // Ajusta a altura do iframe ao redimensionar a janela
         });
     </script>
 </head>
