@@ -35,10 +35,12 @@
             text-align: center;
             margin: 0;
             z-index: 1;
+            position: relative;
+            height: 15vh; /* Ajuste a altura conforme necessário */
         }
         iframe {
             width: 100%;
-            height: calc(100% - 15vh); /* Ajusta a altura do iframe baseado na altura do #message */
+            height: calc(100vh - 15vh); /* Ajusta a altura do iframe para preencher o restante da tela */
             border: none;
             box-sizing: border-box;
             overflow: auto; /* Permite rolar o iframe se necessário */
@@ -49,7 +51,7 @@
                 font-size: 14px;
             }
             iframe {
-                height: calc(100% - 20vh); /* Ajusta a altura do iframe para dispositivos móveis */
+                height: calc(100vh - 20vh); /* Ajusta a altura do iframe para dispositivos móveis */
                 overflow: auto; /* Permite rolar o iframe em dispositivos móveis */
             }
         }
