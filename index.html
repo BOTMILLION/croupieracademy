@@ -14,103 +14,76 @@
             height: 100vh;
             overflow: hidden;
             background-image: url('https://i.ibb.co/Mk5kV1N/Texto-do-seu-par-grafo-2.png');
-            background-size: cover; /* Ajusta a imagem para cobrir toda a área */
-            background-position: center; /* Centraliza a imagem */
-            background-repeat: no-repeat; /* Evita repetição da imagem */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
         .container {
             display: flex;
             flex-direction: column;
             height: 100%;
-            overflow: hidden; /* Evita rolagem extra no contêiner */
+            overflow: hidden;
         }
         #message {
             border: 1px solid #ccc;
             padding: 10px;
-            height: 15vh; /* Ajuste para a altura desejada */
+            height: 15vh;
             overflow-y: auto;
-            background-color: rgba(255, 255, 255, 0.8); /* Fundo semitransparente para contraste */
+            background-color: rgba(255, 255, 255, 0.8);
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            margin: 0; /* Remove margem para melhor ajuste */
+            margin: 0;
             box-sizing: border-box;
-            z-index: 1; /* Garante que a área de mensagens fique acima do iframe */
+            z-index: 1;
         }
         iframe {
             width: 100%;
-            height: 85vh; /* Ajuste a altura do iframe para garantir que não seja cortado */
+            height: 85vh;
             border: none;
             box-sizing: border-box;
         }
         @media (max-width: 600px) {
             #message {
-                height: 20vh; /* Ajuste para a altura desejada em telas pequenas */
-                font-size: 14px; /* Ajuste o tamanho da fonte se necessário */
+                height: 20vh;
+                font-size: 14px;
             }
             iframe {
-                height: 75vh; /* Ajuste a altura do iframe em telas pequenas */
+                height: 75vh;
             }
         }
     </style>
-</head>
-<body>
-    <div class="container">
-        <p id="message">Aguardando mensagens...</p>
-        <iframe src="https://www.seubet.com/cassino-ao-vivo/slots/all/28/evolution/8267-217032-football-studio?mode=real&btag=1994735" title="Cassino ao Vivo"></iframe>
-    </div>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore-compat.js"></script>
     <script>
-        // Sua configuração do Firebase
-        var firebaseConfig = {
-            apiKey: "SUA_API_KEY",
-            authDomain: "SEU_DOMINIO.firebaseapp.com",
-            projectId: "SEU_PROJECT_ID",
-            storageBucket: "SEU_BUCKET.appspot.com",
-            messagingSenderId: "SEU_SENDER_ID",
-            appId: "SEU_APP_ID",
-            measurementId: "SEU_MEASUREMENT_ID"
+        // Configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyD7w-qZb0fOqLBnAisohs4eJFOayvjS_2I",
+            authDomain: "meu-bot-telegram.firebaseapp.com",
+            projectId: "meu-bot-telegram",
+            storageBucket: "meu-bot-telegram.appspot.com",
+            messagingSenderId: "7377232961",
+            appId: "1:7377232961:web:2c4b5e4192e21e768d17ce",
+            measurementId: "G-0E8LSKHPKY"
         };
-        // Inicializa o Firebase
         firebase.initializeApp(firebaseConfig);
 
-        // Inicializa o Firebase Cloud Messaging
-        const messaging = firebase.messaging();
-
-        // Solicita permissão para enviar notificações push
-        messaging.requestPermission()
-            .then(() => {
-                console.log('Permissão concedida!');
-                return messaging.getToken();
-            })
-            .then((token) => {
-                console.log('Token de registro:', token);
-                // Envie o token para o servidor ou use-o conforme necessário
-            })
-            .catch((err) => {
-                console.error('Permissão negada ou erro ao obter o token', err);
-            });
-
-        // Lida com mensagens recebidas
-        messaging.onMessage((payload) => {
-            console.log('Mensagem recebida:', payload);
-            // Mostra a notificação na interface do usuário
-        });
-
-        let ws;
+        // Funções de autenticação e Firestore
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        
         function adicionarParametroUnico() {
-            const urlAtual = window.location.href.split('?')[0]; // Remove qualquer parâmetro de consulta existente
-            const timestamp = new Date().getTime(); // Gera um timestamp único
-            const novoUrl = `${urlAtual}?v=${timestamp}`; // Adiciona o timestamp como parâmetro
-
-            window.history.replaceState(null, '', novoUrl); // Atualiza a URL no navegador
+            const urlAtual = window.location.href.split('?')[0];
+            const timestamp = new Date().getTime();
+            const novoUrl = `${urlAtual}?v=${timestamp}`;
+            window.history.replaceState(null, '', novoUrl);
         }
 
         function conectarWebSocket() {
-            ws = new WebSocket('wss://telegramheroku-87abbc9dd2f9.herokuapp.com/');
-
+            const ws = new WebSocket('wss://telegramheroku-87abbc9dd2f9.herokuapp.com/');
+            
             ws.onopen = function() {
                 console.log('Conectado ao servidor WebSocket');
             };
@@ -121,16 +94,16 @@
                     const reader = new FileReader();
                     reader.onload = function() {
                         const message = reader.result;
-                        if (message !== 'ping') { // Ignora mensagens de ping
-                            messageP.textContent = message; // Substitui a mensagem atual
-                            messageP.scrollTop = messageP.scrollHeight; // Garante que a rolagem vai para o fim
+                        if (message !== 'ping') {
+                            messageP.textContent = message;
+                            messageP.scrollTop = messageP.scrollHeight;
                         }
                     };
                     reader.readAsText(event.data);
                 } else {
-                    if (event.data !== 'ping') { // Ignora mensagens de ping
-                        messageP.textContent = event.data; // Substitui a mensagem atual
-                        messageP.scrollTop = messageP.scrollHeight; // Garante que a rolagem vai para o fim
+                    if (event.data !== 'ping') {
+                        messageP.textContent = event.data;
+                        messageP.scrollTop = messageP.scrollHeight;
                     }
                 }
             };
@@ -145,8 +118,16 @@
             };
         }
 
-        conectarWebSocket();
-        adicionarParametroUnico(); // Adiciona o parâmetro único à URL
+        document.addEventListener('DOMContentLoaded', function() {
+            adicionarParametroUnico();
+            conectarWebSocket();
+        });
     </script>
+</head>
+<body>
+    <div class="container">
+        <p id="message">Aguardando mensagens...</p>
+        <iframe src="https://www.seubet.com/cassino-ao-vivo/slots/all/28/evolution/8267-217032-football-studio?mode=real&btag=1994735" title="Cassino ao Vivo"></iframe>
+    </div>
 </body>
 </html>
