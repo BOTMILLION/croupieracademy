@@ -60,9 +60,46 @@
         <p id="message">Aguardando mensagens...</p>
         <iframe src="https://www.seubet.com/cassino-ao-vivo/slots/all/28/evolution/8267-217032-football-studio?mode=real&btag=1994735" title="Cassino ao Vivo"></iframe>
     </div>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
     <script>
-        let ws;
+        // Sua configuração do Firebase
+        var firebaseConfig = {
+            apiKey: "SUA_API_KEY",
+            authDomain: "SEU_DOMINIO.firebaseapp.com",
+            projectId: "SEU_PROJECT_ID",
+            storageBucket: "SEU_BUCKET.appspot.com",
+            messagingSenderId: "SEU_SENDER_ID",
+            appId: "SEU_APP_ID",
+            measurementId: "SEU_MEASUREMENT_ID"
+        };
+        // Inicializa o Firebase
+        firebase.initializeApp(firebaseConfig);
 
+        // Inicializa o Firebase Cloud Messaging
+        const messaging = firebase.messaging();
+
+        // Solicita permissão para enviar notificações push
+        messaging.requestPermission()
+            .then(() => {
+                console.log('Permissão concedida!');
+                return messaging.getToken();
+            })
+            .then((token) => {
+                console.log('Token de registro:', token);
+                // Envie o token para o servidor ou use-o conforme necessário
+            })
+            .catch((err) => {
+                console.error('Permissão negada ou erro ao obter o token', err);
+            });
+
+        // Lida com mensagens recebidas
+        messaging.onMessage((payload) => {
+            console.log('Mensagem recebida:', payload);
+            // Mostra a notificação na interface do usuário
+        });
+
+        let ws;
         function adicionarParametroUnico() {
             const urlAtual = window.location.href.split('?')[0]; // Remove qualquer parâmetro de consulta existente
             const timestamp = new Date().getTime(); // Gera um timestamp único
