@@ -27,20 +27,18 @@
         #message {
             border: 1px solid #ccc;
             padding: 10px;
-            height: 15vh;
-            overflow-y: auto;
             background-color: rgba(255, 255, 255, 0.8);
+            box-sizing: border-box;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
             margin: 0;
-            box-sizing: border-box;
             z-index: 1;
         }
         iframe {
             width: 100%;
-            height: 85vh;
+            height: calc(100% - 15vh); /* Ajusta a altura do iframe baseado na altura do #message */
             border: none;
             box-sizing: border-box;
         }
@@ -50,7 +48,7 @@
                 font-size: 14px;
             }
             iframe {
-                height: 75vh;
+                height: calc(100% - 20vh); /* Ajusta a altura do iframe para dispositivos móveis */
             }
         }
     </style>
