@@ -46,6 +46,7 @@
             box-sizing: border-box;
             overflow: hidden;
             display: block;
+            height: calc(100vh - 10vh); /* Ajuste da altura do iframe */
         }
         @media (max-width: 600px) {
             #message {
@@ -53,8 +54,7 @@
                 font-size: 14px;
             }
             iframe {
-                height: calc(100vh - 15vh); /* Ajusta a altura do iframe para dispositivos móveis */
-                max-height: 75vh; /* Garante que o iframe não exceda a altura da tela */
+                height: calc(100vh - 15vh); /* Ajuste da altura do iframe para dispositivos móveis */
             }
         }
     </style>
