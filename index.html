@@ -43,8 +43,8 @@
             width: 100%;
             border: none;
             box-sizing: border-box;
-            margin-top: 0; /* Remover o ajuste para cima */
-            display: block; /* Garante que o iframe se comporte como um bloco */
+            margin-top: 0; /* Remove o ajuste para cima */
+            height: calc(100vh - 10vh); /* Ajusta a altura para preencher o restante da tela */
         }
         @media (max-width: 600px) {
             #message {
@@ -52,7 +52,8 @@
                 font-size: 14px;
             }
             iframe {
-                height: calc(100vh - 15vh); /* Ajuste a altura para dispositivos móveis */
+                height: calc(100vh - 15vh); /* Ajusta a altura do iframe para dispositivos móveis */
+                overflow: auto; /* Adiciona rolagem ao iframe, se necessário */
             }
         }
     </style>
@@ -101,17 +102,9 @@
             };
         }
 
-        function ajustarAlturaIframe() {
-            const iframe = document.querySelector('iframe');
-            const messageHeight = document.getElementById('message').offsetHeight;
-            iframe.style.height = `calc(100vh - ${messageHeight}px)`;
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
             adicionarParametroUnico();
             conectarWebSocket();
-            ajustarAlturaIframe();
-            window.addEventListener('resize', ajustarAlturaIframe); // Ajusta a altura do iframe ao redimensionar a janela
         });
     </script>
 </head>
