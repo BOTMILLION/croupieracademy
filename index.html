@@ -44,9 +44,10 @@
             width: 100%;
             border: none;
             box-sizing: border-box;
-            margin-top: 0; /* Remove ajuste para cima */
-            height: calc(100vh - 10vh); /* Ajusta altura do iframe para preencher o restante da tela */
-            overflow: hidden; /* Remove rolagem externa do iframe */
+            height: calc(100vh - 10vh); /* Ajusta a altura do iframe para preencher o restante da tela */
+            min-height: 500px; /* Define uma altura mínima para o iframe */
+            overflow: auto; /* Permite rolagem interna se o conteúdo for maior */
+            display: block; /* Garante que o iframe seja exibido como um bloco */
         }
         @media (max-width: 600px) {
             #message {
@@ -55,7 +56,6 @@
             }
             iframe {
                 height: calc(100vh - 15vh); /* Ajusta altura do iframe para dispositivos móveis */
-                overflow: hidden; /* Remove rolagem externa do iframe */
             }
         }
     </style>
