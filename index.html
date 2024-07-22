@@ -41,6 +41,7 @@
             height: calc(100% - 15vh); /* Ajusta a altura do iframe baseado na altura do #message */
             border: none;
             box-sizing: border-box;
+            overflow: auto; /* Permite rolar o iframe se necessário */
         }
         @media (max-width: 600px) {
             #message {
@@ -49,6 +50,7 @@
             }
             iframe {
                 height: calc(100% - 20vh); /* Ajusta a altura do iframe para dispositivos móveis */
+                overflow: auto; /* Permite rolar o iframe em dispositivos móveis */
             }
         }
     </style>
