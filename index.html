@@ -44,9 +44,9 @@
             width: 100%;
             border: none;
             box-sizing: border-box;
-            height: calc(100vh - 10vh); /* Ajusta a altura do iframe para preencher o restante da tela */
-            min-height: 500px; /* Define uma altura mínima para o iframe */
-            overflow: auto; /* Permite rolagem interna se o conteúdo for maior */
+            height: 80vh; /* Define uma altura fixa para o iframe */
+            max-height: 100%; /* Garante que o iframe não exceda a altura da tela */
+            overflow: hidden; /* Oculta a rolagem externa */
             display: block; /* Garante que o iframe seja exibido como um bloco */
         }
         @media (max-width: 600px) {
