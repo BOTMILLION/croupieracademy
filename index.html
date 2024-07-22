@@ -54,26 +54,7 @@
             }
         }
     </style>
-    <script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.9.3/firebase-firestore-compat.js"></script>
     <script>
-        // Configuração do Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyD7w-qZb0fOqLBnAisohs4eJFOayvjS_2I",
-            authDomain: "meu-bot-telegram.firebaseapp.com",
-            projectId: "meu-bot-telegram",
-            storageBucket: "meu-bot-telegram.appspot.com",
-            messagingSenderId: "7377232961",
-            appId: "1:7377232961:web:2c4b5e4192e21e768d17ce",
-            measurementId: "G-0E8LSKHPKY"
-        };
-        firebase.initializeApp(firebaseConfig);
-
-        // Funções de autenticação e Firestore
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        
         function adicionarParametroUnico() {
             const urlAtual = window.location.href.split('?')[0];
             const timestamp = new Date().getTime();
